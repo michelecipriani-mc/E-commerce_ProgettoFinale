@@ -70,7 +70,7 @@ public class UserController {
      * @param viewModel L'oggetto Model usato per passare dati alla vista.
      * @return Il nome del template Thymeleaf da renderizzare, ovvero "user".
      */
-    @GetMapping("/utente/{id}")
+    @GetMapping("/userinfo/{id}")
     public String getUserInfo(@PathVariable("id") Long id, Model viewModel) {
         // Recupera le informazioni dell'utente dal servizio e le aggiunge al modello
         viewModel.addAttribute("user", userService.getUserInfo(id));
@@ -84,12 +84,12 @@ public class UserController {
      * @param viewModel L'oggetto Model usato per passare dati alla vista.
      * @return Il nome del template Thymeleaf da renderizzare, ovvero "dashboard".
      */
-    @GetMapping("/utente/dashboard")
+    @GetMapping("/user/dashboard")
     public String dashboard(Model viewModel) {
         // Aggiunge al modello le informazioni dell'utente necessarie per la dashboard
         viewModel.addAttribute("user", userService.dashboard());
 
-        return "dashboard"; // Corrisponde al file templates/dashboard.html
+        return "user/dashboard"; // Corrisponde al file templates/user/dashboard.html
     }
 
     @GetMapping("/register")
