@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div th:insert="~{index :: navbar}"></div>
+
+    <div class="page-center">
+        <div class="form-container">
+
+            <div class="row">
+                <div class="col-12 justify-content-center align-items-center">
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info errorMessageLR">
+                            You have successfully registered our App!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form class="form" method="post" th:action="@{/register/save}" th:object="${user}">
+
+                <!-- First & Last Name -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="text" placeholder="First Name" id="firstName"
+                            th:field="*{firstName}" required>
+                        <p th:errors="*{firstName}" class="text-danger" th:if="${#fields.hasErrors('firstName')}"></p>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" placeholder="Last Name" id="lastName"
+                            th:field="*{lastName}" required>
+                        <p th:errors="*{lastName}" class="text-danger" th:if="${#fields.hasErrors('lastName')}"></p>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="input-group">
+                    <input type="email" placeholder="Email" id="email" th:field="*{email}" required>
+                    <p th:errors="*{email}" class="text-danger" th:if="${#fields.hasErrors('email')}"></p>
+                </div>
+
+                <!-- Date (non vincolata all’oggetto User) -->
+                <div class="input-group">
+                    <input type="date">
+                </div>
+
+                <!-- Password & Conferma -->
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="password" placeholder="Password" id="password" th:field="*{password}" required>
+                        <p th:errors="*{password}" class="text-danger" th:if="${#fields.hasErrors('password')}"></p>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+
+                <!-- Link login -->
+                <p class="text-center">
+                    Already registered?
+                    <a href="login.html" class="login-button">Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <div th:insert="~{index :: footer}"></div>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+
+</body>
+</html>
