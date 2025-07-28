@@ -1,4 +1,4 @@
-package com.smartbay.progettofinale.controller;
+package com.smartbay.progettofinale.Controllers;
 
 import java.util.List;
 
@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.smartbay.progettofinale.model.Ordine;
-import com.smartbay.progettofinale.security.SecurityService;
-import com.smartbay.progettofinale.service.OrdineService;
+import com.smartbay.progettofinale.Models.Ordine;
+import com.smartbay.progettofinale.Models.User;
+import com.smartbay.progettofinale.Security.SecurityService;
+import com.smartbay.progettofinale.Services.OrdineService;
+
 
 @RestController
 @RequestMapping("/ordini")

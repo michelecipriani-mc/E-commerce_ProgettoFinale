@@ -22,7 +22,7 @@ public class CarrelloService {
   }
 
   // Ottieni carrello dell'Utente, o creane uno se non esiste
-  private Carrello getCarrelloFromUtente(Long idUtente) {
+  public Carrello getCarrelloFromUtente(Long idUtente) {
 
     if (carrelli.containsKey(idUtente)) {
       return carrelli.get(idUtente);

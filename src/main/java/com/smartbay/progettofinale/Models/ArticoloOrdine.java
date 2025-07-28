@@ -1,4 +1,4 @@
-package com.smartbay.progettofinale.model;
+package com.smartbay.progettofinale.Models;
 
 import jakarta.persistence.*;
 import lombok.Data;

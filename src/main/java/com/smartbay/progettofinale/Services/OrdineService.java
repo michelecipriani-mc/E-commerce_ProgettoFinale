@@ -1,8 +1,14 @@
-package com.smartbay.progettofinale.service;
+package com.smartbay.progettofinale.Services;
 
-import com.smartbay.progettofinale.model.*;
-import com.smartbay.progettofinale.repository.ArticleRepository;
-import com.smartbay.progettofinale.repository.OrdineRepository;
+import com.smartbay.progettofinale.Models.Article;
+import com.smartbay.progettofinale.Models.ArticoloOrdine;
+import com.smartbay.progettofinale.Models.Carrello;
+import com.smartbay.progettofinale.Models.Ordine;
+import com.smartbay.progettofinale.Models.User;
+import com.smartbay.progettofinale.Repositories.ArticleRepository;
+import com.smartbay.progettofinale.Repositories.OrdineRepository;
+import com.smartbay.progettofinale.Repositories.UserRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,19 +22,21 @@ public class OrdineService {
     private final CarrelloService carrelloService;
     private final ArticleRepository articleRepository;
     private final OrdineRepository ordineRepository;
+    private final UserRepository userRepository;
 
     public OrdineService(CarrelloService carrelloService, ArticleRepository articleRepository,
-                         OrdineRepository ordineRepository) {
+                         OrdineRepository ordineRepository, UserRepository userRepository) {
         this.carrelloService = carrelloService;
         this.articleRepository = articleRepository;
         this.ordineRepository = ordineRepository;
+        this.userRepository = userRepository;
     }
 
     //METODO CREA ORDINE AGGIORNATO CON SCALO DALLA BALANCE
     public Ordine creaOrdine(User user) {
     Carrello carrello = carrelloService.getCarrelloFromUtente(user.getId());
 
-    if (carrello.getArticoli().isEmpty()) {
+    if (carrello.getArticles().isEmpty()) {
         throw new RuntimeException("Il carrello è vuoto");
     }
 
@@ -43,14 +51,14 @@ public class OrdineService {
     ordine.setDataOrdine(LocalDateTime.now());
     ordine.setTotale(totale);
 
-    List<ArticoloOrdine> articoli = carrello.getArticoli().entrySet().stream()
+    List<ArticoloOrdine> articoli = carrello.getArticles().entrySet().stream()
         .map(entry -> {
             Long idArticolo = entry.getKey();
             Integer quantita = entry.getValue();
             Article articolo = articleRepository.findById(idArticolo)
                 .orElseThrow(() -> new RuntimeException("Articolo non trovato"));
 
-            ArticoliOrdine voce = new ArticoliOrdine();
+            ArticoloOrdine voce = new ArticoloOrdine();
             voce.setArticoloId(idArticolo);
             voce.setTitoloArticolo(articolo.getTitle());
             voce.setQuantita(quantita);
