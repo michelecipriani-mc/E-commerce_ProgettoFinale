@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.smartbay.progettofinale.DTO.ArticleDTO;
+import com.smartbay.progettofinale.DTO.PersonalInfoDTO;
 import com.smartbay.progettofinale.DTO.UserDTO;
 import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.User;
@@ -60,6 +61,35 @@ public class UserController {
         List<ArticleDTO> lastThreeArticles = articles.stream().limit(3).collect(Collectors.toList());
         viewModel.addAttribute("articles", lastThreeArticles);
         return "home";
+    }
+
+    /**
+     * Gestisce la richiesta GET per visualizzare le informazioni di un utente specifico.
+     *
+     * @param id L'identificativo dell'utente da visualizzare.
+     * @param viewModel L'oggetto Model usato per passare dati alla vista.
+     * @return Il nome del template Thymeleaf da renderizzare, ovvero "user".
+     */
+    @GetMapping("/utente/{id}")
+    public String getUserInfo(@PathVariable("id") Long id, Model viewModel) {
+        // Recupera le informazioni dell'utente dal servizio e le aggiunge al modello
+        viewModel.addAttribute("user", userService.getUserInfo(id));
+
+        return "user"; // Corrisponde al file templates/user.html
+    }
+
+    /**
+     * Gestisce la richiesta GET per la dashboard dell'utente corrente.
+     *
+     * @param viewModel L'oggetto Model usato per passare dati alla vista.
+     * @return Il nome del template Thymeleaf da renderizzare, ovvero "dashboard".
+     */
+    @GetMapping("/dashboard")
+    public String dashboard(Model viewModel) {
+        // Aggiunge al modello le informazioni dell'utente necessarie per la dashboard
+        viewModel.addAttribute("user", userService.dashboard());
+
+        return "dashboard"; // Corrisponde al file templates/dashboard.html
     }
 
     @GetMapping("/register")
