@@ -1,0 +1,129 @@
+body {
+    background-color: white;
+}
+
+.transparent {
+    background-color: transparent;
+    backdrop-filter: blur(3px);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+                rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+                rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    height: 80px;
+}
+
+/* Messaggi di errore */
+.errorMessage {
+    margin-top: 80px;
+    z-index: 99;
+}
+
+.errorMessageLR {
+    margin-top: -20px;
+    z-index: 99;
+}
+
+/* Badge su icona carrello */
+.badge {
+    position: relative;
+    top: -10px;
+    left: -12px;
+}
+
+/* Spaziatura intestazioni */
+.intest {
+    margin-top: 100px;
+}
+
+/* Immagini card prodotto */
+.imgCard {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* ============================== */
+/* ======= BRANDING SMARTBAY ==== */
+/* ============================== */
+
+/* NAVBAR */
+.smartbay-navbar {
+    background-color: #001D3D;
+    border-bottom:2px solid #FFD60A;
+}
+
+.smartbay-navbar a {
+    color: #ffffff !important;
+}
+
+.smartbay-navbar a:hover {
+    color: #FFD60A !important;
+}
+
+/* HEADER TESTO */
+.smartbay-header {
+    color: #001D3D;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.smartbay-subtext {
+    color: #555;
+}
+
+/* CARD centrale (form registrazione/login) */
+.register-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 15px;
+}
+
+/* Pulsante SmartBay */
+.btn-smartbay {
+    background-color: #FFC300;
+    border: none;
+    color: #001D3D;
+    font-weight: bold;
+}
+
+.btn-smartbay:hover {
+    background-color: #003566;
+    color: #000814;
+}
+
+/* Label campi form */
+.form-label {
+    color: #000814;
+}
+
+/* Link */
+a {
+    color: #003566;
+}
+
+a:hover {
+    color: #001D3D;
+}
+
+/* Campi input */
+.form-control {
+    background-color: #f0f0f0;
+    color: #000;
+    border: 1px solid #FFD60A;
+}
+
+.form-control::placeholder {
+    color: #888;
+}
+
+/* FOOTER */
+.smartbay-footer {
+    background-color: #000814;
+    color: #ffffff;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 0.9rem;
+}

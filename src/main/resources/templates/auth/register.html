@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}">
+    <title>Register - SmartBay</title>
+    
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header th:insert="~{index :: navbar}"></header>
+
+    <!-- REGISTRAZIONE -->
+    <div class="container d-flex justify-content-center align-items-center min-vh-100 py-5">
+        <div class="card shadow-lg p-4 w-100" style="max-width: 500px;">
+            <div class="text-center mb-4">
+                <div class="smartbay-header">SmartBay</div>
+                <p class="smartbay-subtext">Create your account and start shopping smarter!</p>
+            </div>
+
+            <div th:if="${param.success}">
+                <div class="alert alert-success text-center">
+                    You have successfully registered!
+                </div>
+            </div>
+
+            <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
+
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-control" placeholder="Enter your first name" th:field="*{firstName}" />
+                    <p th:errors="*{firstName}" class="text-danger" th:if="${#fields.hasErrors('firstName')}"></p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" placeholder="Enter your last name" th:field="*{lastName}" />
+                    <p th:errors="*{lastName}" class="text-danger" th:if="${#fields.hasErrors('lastName')}"></p>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" placeholder="Enter your email" th:field="*{email}" />
+                    <p th:errors="*{email}" class="text-danger" th:if="${#fields.hasErrors('email')}"></p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" placeholder="Create a password" th:field="*{password}" />
+                    <p th:errors="*{password}" class="text-danger" th:if="${#fields.hasErrors('password')}"></p>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-smartbay btn-lg">Register</button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <small>Already have an account? <a th:href="@{/login}">Login here</a></small>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer th:insert="~{index :: footer}" class="smartbay-footer"></footer>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+
+</body>
+</html>

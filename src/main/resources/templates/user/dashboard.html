@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}">
+    <title>Dashboard - SmartBay</title>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header th:insert="~{index :: navbar}"></header>
+
+    <!-- DASHBOARD -->
+    <div class="container py-5">
+        <div class="card shadow-lg p-4">
+            <div class="text-center mb-4">
+                <h2 class="smartbay-header">Welcome to your Dashboard</h2>
+                <p class="smartbay-subtext">Manage your account and view your details</p>
+            </div>
+
+            <div class="mb-4">
+                <h4 class="mb-3">Personal Information</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>Username:</strong> <span th:text="${user.username}">Utente</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Email:</strong> <span th:text="${user.email}">email@example.com</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Roles:</strong>
+                        <ul class="mb-0">
+                            <li th:each="role : ${user.roles}" th:text="${role.name}">ROLE_USER</li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Balance:</strong> <span th:text="${#numbers.formatDecimal(user.balance, 1, 2)}">0.00</span> €
+                    </li>
+                </ul>
+            </div>
+
+            <div class="d-grid">
+                <a th:href="@{/shop}" class="btn btn-smartbay btn-lg">Go to Shop</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer th:insert="~{index :: footer}" class="smartbay-footer mt-5"></footer>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+
+</body>
+
+</html>

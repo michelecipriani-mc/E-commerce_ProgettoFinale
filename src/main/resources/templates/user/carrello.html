@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}">
+    <title>Carrello - SmartBay</title>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header th:insert="~{index :: navbar}"></header>
+
+    <!-- CARRELLO -->
+    <div class="container py-5">
+        <div class="card shadow-lg p-4">
+            <h2 class="smartbay-header mb-4">Il tuo carrello</h2>
+
+            <!-- Se il carrello è vuoto -->
+            <div th:if="${#lists.isEmpty(carrello.articoli)}">
+                <p>Il tuo carrello è vuoto.</p>
+            </div>
+
+            <!-- Se il carrello contiene articoli -->
+            <div th:unless="${#lists.isEmpty(carrello.articoli)}">
+                <div th:each="articolo : ${carrello.articoli}" 
+                     class="d-flex justify-content-between align-items-center border-bottom py-2">
+                    
+                    <div>
+                        <strong th:text="${articolo.nome}">Nome Articolo</strong><br>
+                        <small>Prezzo: €<span th:text="${articolo.prezzo}">0.00</span></small><br>
+
+                        <form th:action="@{/carrello/update}" method="post" class="d-flex align-items-center mt-1">
+                            <input type="hidden" name="idArticolo" th:value="${articolo.id}" />
+                            <input type="number" min="1" name="cambiamentoQuantita" th:value="${articolo.quantita}" class="form-control form-control-sm me-2" style="width: 80px;" />
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Aggiorna</button>
+                        </form>
+                    </div>
+
+                    <form th:action="@{/carrello/remove/{id}(id=${articolo.id})}" method="post">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Rimuovi</button>
+                    </form>
+                </div>
+
+                <!-- Totale -->
+                <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                    <strong>Totale:</strong>
+                    <strong th:text="'€ ' + ${#numbers.formatDecimal(totale, 1, 2)}">€ 0.00</strong>
+                </div>
+
+                <!-- Azioni -->
+                <div class="mt-4 d-flex justify-content-between">
+                    <form th:action="@{/carrello/clear}" method="post">
+                        <button type="submit" class="btn btn-outline-danger">Svuota carrello</button>
+                    </form>
+                    <button class="btn btn-smartbay">Procedi al checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer th:insert="~{index :: footer}" class="smartbay-footer mt-5"></footer>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+
+</body>
+</html>

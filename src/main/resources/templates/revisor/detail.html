@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}"></head>
+
+<body>
+
+    <head th:insert="~{index :: navbar}"></head>
+
+        <div class="container-fluid intest">
+            <div class="row align-items-center">
+                <div class="col-12 d-flex flex-column justify-content-center align-items-center my-3">
+                    <h1 class="h1">Article: </h1>
+                    <h2 th:text="${article.title}">Title</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 d-flex flex-column">
+                    <div id="carouselExample" class="carousel slide">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top d-block w-100" alt="article img">
+                                <img th:unless="${article.image != null}" th:src="@{/images/default.png}" class="card-img-top d-block w-100" alt="article default img">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12">            
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <h3 th:text="${article.subtitle}">Subtitle</h3>
+                        <p class="fs-5" th:if="${article.category != null}">Category:
+                            <a th:href="@{/categories/search/{id}(id=${article.category.id})}" class="text-capitalize fw-bold text-muted" th:text="${article.category.name}">category</a>
+                        </p>
+                        <p class="fs-5" th:if="${article.category == null}">No category</p>
+
+                        <div class="text-muted my-3">
+                            <p>Published on: <span th:text="${article.publishDate}"></span> by</p>
+                            <a class="text-muted" th:href="@{/search/{id}(id=${article.user.id})}">
+                                <p th:text="${article.user.username}">User</p>
+                            </a>
+                        </div>
+                    </div>
+                    <hr>
+                    <p th:text="${article.body}"></p>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <form th:action="@{/articles/accept(action='accept', articleId=${article.id})}" method="post">
+                            <button type="submit" class="btn btn-success m-2">
+                                Accept
+                            </button>
+                        </form>
+                        <form th:action="@{/articles/accept(action='reject', articleId=${article.id})}" method="post" th:object="${article}">
+                            <button type="submit" class="btn btn-danger m-2">
+                                Reject
+                            </button>
+                        </form>
+                    </div>                    
+                    <div class="text-muted my-3 d-flex justify-content-center align-items-center">
+                        <a href="#" class="btn btn-secondary pointer" onclick="goBack()">Go Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <head th:insert="~{index :: footer}"></head>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+    
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+
+</html>

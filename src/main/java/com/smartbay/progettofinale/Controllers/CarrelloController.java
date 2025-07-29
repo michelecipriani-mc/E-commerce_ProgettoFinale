@@ -1,17 +1,18 @@
 package com.smartbay.progettofinale.Controllers;
 
 import java.math.BigDecimal;
-import org.springframework.http.ResponseEntity;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.smartbay.progettofinale.DTO.AggiornaArticoloCarrelloRequest;
 import com.smartbay.progettofinale.DTO.CarrelloDTO;
+import com.smartbay.progettofinale.DTO.AggiornaArticoloCarrelloRequest;
 import com.smartbay.progettofinale.Security.SecurityService;
 import com.smartbay.progettofinale.Services.CarrelloService;
 
-
-@RestController
-@RequestMapping("/api/carrello")
+@Controller
+@RequestMapping("/carrello")
 public class CarrelloController {
 
   private final SecurityService securityService;
@@ -22,40 +23,40 @@ public class CarrelloController {
     this.carrelloService = carrelloService;
   }
 
+  // Mostra la pagina del carrello
   @GetMapping
-  public ResponseEntity<CarrelloDTO> getCarrello() {
+  public String mostraCarrello(Model model) {
     Long idUtente = securityService.getActiveUserId();
-    CarrelloDTO dto = carrelloService.getCarrelloDTOFromUtente(idUtente);
-    return ResponseEntity.ok(dto);
+    CarrelloDTO carrello = carrelloService.getCarrelloDTOFromUtente(idUtente);
+    BigDecimal totale = carrelloService.getPrezzoTotaleCarrello(idUtente);
+
+    model.addAttribute("carrello", carrello);
+    model.addAttribute("totale", totale);
+
+    return "user/carrello"; // Corretto: templates/user/carrello.html
   }
 
-  @PutMapping("/update")
-  public ResponseEntity<CarrelloDTO> aggiornaQuantitaArticolo(
-      @RequestBody AggiornaArticoloCarrelloRequest request) {
+  // Aggiorna quantità articolo nel carrello
+  @PostMapping("/update")
+  public String aggiornaQuantitaArticolo(@ModelAttribute AggiornaArticoloCarrelloRequest request) {
     Long idUtente = securityService.getActiveUserId();
-    CarrelloDTO dto = carrelloService.aggiornaQuantitaArticolo(idUtente, request.getIdArticolo(),
-        request.getCambiamentoQuantita());
-    return ResponseEntity.ok(dto);
+    carrelloService.aggiornaQuantitaArticolo(idUtente, request.getIdArticolo(), request.getCambiamentoQuantita());
+    return "redirect:/carrello";
   }
 
-  @DeleteMapping("/remove/{idArticolo}")
-  public ResponseEntity<CarrelloDTO> rimuoviArticoloDaCarrello(@PathVariable Long idArticolo) {
+  // Rimuove un articolo dal carrello
+  @PostMapping("/remove/{idArticolo}")
+  public String rimuoviArticoloDaCarrello(@PathVariable Long idArticolo) {
     Long idUtente = securityService.getActiveUserId();
-    CarrelloDTO dto = carrelloService.rimuoviArticolo(idUtente, idArticolo);
-    return ResponseEntity.ok(dto);
+    carrelloService.rimuoviArticolo(idUtente, idArticolo);
+    return "redirect:/carrello";
   }
 
-  @DeleteMapping("/clear")
-  public ResponseEntity<Void> svuotaCarrello() {
+  // Svuota l'intero carrello
+  @PostMapping("/clear")
+  public String svuotaCarrello() {
     Long idUtente = securityService.getActiveUserId();
     carrelloService.svuotaCarrello(idUtente);
-    return ResponseEntity.noContent().build();
-  }
-
-  @GetMapping("/total")
-  public ResponseEntity<BigDecimal> getCarrelloTotal() {
-    Long idUtente = securityService.getActiveUserId();
-    BigDecimal total = carrelloService.getPrezzoTotaleCarrello(idUtente);
-    return ResponseEntity.ok(total);
+    return "redirect:/carrello";
   }
 }

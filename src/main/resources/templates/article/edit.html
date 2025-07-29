@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}"></head>
+
+<body>
+
+    <head th:insert="~{index :: navbar}"></head>
+
+    <div class="container-fluid intest">
+        <div class="row ms-5 align-items-center">
+            <!-- Header -->
+            <div class="col-12 d-flex flex-column justify-content-center align-items-center my-3">
+                <h1>Edit Article </h1>
+                <h2 th:text="${article.title}">Title</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <!-- Form -->
+            <div class="col-12 my-5">
+                <form method="post" th:action="@{/articles/update/{id}(id=${article.id})}" th:object="${article}" enctype="multipart/form-data">
+                    <!-- Title input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label for="articleTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="articleTitle" placeholder="Enter a Title for your Article" th:field="*{title}"/>
+                        <p th:errors="*{title}" class="text-danger" th:if="${#fields.hasErrors('title')}"></p>
+                    </div>
+
+                    <!-- Subtitle input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label for="subtitle" class="form-label">Subtitle</label>
+                        <input type="text" class="form-control" id="subtitle" placeholder="Enter a Subtitle for your Article" th:field="*{subtitle}"/>
+                        <p th:errors="*{subtitle}" class="text-danger" th:if="${#fields.hasErrors('subtitle')}"></p>
+                    </div>
+
+                    <!-- Body input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label for="body" class="form-label">Article:</label>
+                        <input type="text" class="form-control" id="body" placeholder="Write your Article" th:field="*{body}"/>
+                        <p th:errors="*{body}" class="text-danger" th:if="${#fields.hasErrors('body')}"></p>
+                    </div>
+
+                    <!-- Publishing Date input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label for="date" class="form-label">Publish Date</label>
+                        <input type="date" class="form-control" id="date" placeholder="(8 char max) YYYY/MM/GG" th:field="*{publishDate}"/>
+                        <p th:errors="*{publishDate}" class="text-danger" th:if="${#fields.hasErrors('publishDate')}"></p>
+                    </div>
+
+                    <!-- Category input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" th:field="*{category}" class="form-select">
+                            <option th:each="category:${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                            <p th:errors="*{category}" class="text-danger" th:if="${#fields.hasErrors('category')}"></p>
+                        </select>
+                    </div>
+
+                    <!-- Last image -->
+                    <div class="mb-3 d-flex flex-column" th:if="${article.image != null}">
+                        <label for="image" class="form-label">Image</label>
+                        <img th:src="${article.image.path}" id="image" alt="${article.image.path}">
+                    </div>
+                    <div th:unless="${article.image != null}">
+                        <label for="image" class="form-label">Image</label>
+                        <p>Image not found</p>
+                    </div>
+
+                    <!-- Image edit -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" name="file" id="image" class="form-control">
+                    </div>
+
+                    <!-- Submit button and Login-->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <button data-mdb-ripple-init type="submit" class="btn btn-secondary btn-block mb-3">Edit Article</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <head th:insert="~{index :: footer}"></head>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+</body>
+
+</html>
