@@ -27,27 +27,24 @@
                         <strong th:text="${item.articolo.title}">Nome Articolo</strong><br>
                         <small>Prezzo: €<span th:text="${item.articolo.price}">0.00</span></small><br>
 
-                        <form th:action="@{/carrello/update}" method="post" class="...">
-                            <input type="hidden" name="idArticolo" th:value="${item.articolo.id}" />
-                            <input type="hidden" name="cambiamentoQuantita" th:value="-5" />
-                            <!-- Will be changed by button -->
+                        <!-- Quantity Control -->
+                        <!-- Remove all and refresh page -->
+                        <form th:action="@{/carrello/remove(id=${item.articolo.id}, changeInQuantity=-1)}" method="post">
                             <button type="submit" class="btn btn-sm btn-outline-danger">🗑</button>
                         </form>
 
-                        <!-- Quantity Control -->
-                        <form th:action="@{/carrello/update}" method="post" class="d-inline-flex">
-                            <input type="hidden" name="idArticolo" th:value="${item.articolo.id}" />
-                            <input type="hidden" name="cambiamentoQuantita" value="-1" />
-                            <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                        <!-- Remove one -->
+                        <form th:action="@{/carrello/update(id=${item.articolo.id}, changeInQuantity=-1)}" method="post">
+                            <button type="submit" class="btn btn-secondary mx-1">-</button>
                         </form>
 
                         <span class="mx-2" th:text="${item.quantita}">1</span>
 
-                        <form th:action="@{/carrello/update}" method="post" class="d-inline-flex">
-                            <input type="hidden" name="idArticolo" th:value="${item.articolo.id}" />
-                            <input type="hidden" name="cambiamentoQuantita" value="1" />
-                            <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+                        <!-- Add one -->
+                        <form th:action="@{/carrello/add/{id}(id=${item.articolo.id})}" method="post">
+                            <button type="submit" class="btn btn-secondary mx-1">+</button>
                         </form>
+
                     </div>
                 </div>
 
