@@ -49,6 +49,13 @@
                         <p th:errors="*{publishDate}" class="text-danger" th:if="${#fields.hasErrors('publishDate')}"></p>
                     </div>
 
+                    <!-- Price input -->
+                    <div data-mdb-input-init class="form-outline mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" placeholder="Enter the price in EUR" th:field="*{price}" step="1" min="1" max="1000"/>
+                        <p th:errors="*{price}" class="text-danger" th:if="${#fields.hasErrors('price')}"></p>
+                    </div>
+
                     <!-- Category input -->
                     <div data-mdb-input-init class="form-outline mb-3">
                         <label for="category" class="form-label">Category</label>

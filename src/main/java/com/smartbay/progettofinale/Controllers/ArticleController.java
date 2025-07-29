@@ -108,7 +108,7 @@ public class ArticleController {
             viewModel.addAttribute("categories", categoryService.readAll());
             return "article/edit";  
         } else {
-            return "redirect:/writer/dashboard";
+            return "redirect:/seller/dashboard";
         }
     }
 
@@ -137,14 +137,14 @@ public class ArticleController {
         }
 
         articleService.update(id, article, file);
-        return "redirect:/writer/dashboard";
+        return "redirect:/seller/dashboard";
     }
 
     @GetMapping("/delete/{id}")
     public String articleDelete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         articleService.delete(id);
         redirectAttributes.addFlashAttribute("successMessage", "Article successfully deleted!");
-        return "redirect:/writer/dashboard";
+        return "redirect:/seller/dashboard";
     }
 
     @GetMapping("/revisor/dashboard")
