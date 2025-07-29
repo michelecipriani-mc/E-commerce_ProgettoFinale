@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head">
     <meta charset="utf-8">
@@ -27,8 +27,8 @@
                 <div class="col-4 d-flex justify-content-start align-items-center">
                     <!-- Brand -->
                     <a class="navbar-brand me-2 mb-1 d-flex justify-content-center align-items-center" th:href="@{/}">
-                        <img src="..." width="50" height="50" alt="MikeTimes logo"
-                            class="img-fluid rounded-pill" />
+                        <!-- <img src="..." width="50" height="50" alt="MikeTimes logo"
+                            class="img-fluid rounded-pill" /> -->
                     </a>
                     <form class="input-group w-auto my-auto d-none d-sm-flex" th:action="@{/articles/search}" method="get">
                         <input type="search" class="form-control rounded me-2" placeholder="Search" name="keyword"
@@ -203,17 +203,17 @@
                             </li>
                             <li>
                                 <p class="text-body" href="#!">Consegna</p>
-                                <img src="images/swift_parcel.png" width="40" height="40" class="img-fluid">
+                                <img th:src="@{images/swift_parcel.png}" width="40" height="40" class="img-fluid">
                             </li>
                             <li>
                                 <p class="text-body" href="#!">MDP</p>
-                                <img src="images/mobile_payment_app.png" width="40" height="40" class="rounded img-fluid">
+                                <img th:src="@{images/mobile_payment_app.png}" width="40" height="40" class="rounded img-fluid">
                                 <br>
-                                <img src="images/payment_app.png" width="40" height="40" class="rounded mt-1 img-fluid">
+                                <img th:src="@{images/payment_app.png}" width="40" height="40" class="rounded mt-1 img-fluid">
                             </li>
                             <li>
                                 <p class="text-body">Scaricare app</p>
-                                <img src="images/dpwnload_app.png" width="180" height="100">
+                                <img th:src="@{images/dpwnload_app.png}" width="180" height="100">
                             </li>
                         </ul>
                     </div>
@@ -226,7 +226,7 @@
         <!-- Grid container -->
 
         <!-- Copyright -->
-        <div class="text-center p-3 bg-dark text-white">
+        <div class="text-center p-3 copyColor text-white">
             © 2025 Copyright:
             <a class="text-reset fw-bold" th:href="@{/}">SmartBay.com</a>
         </div>

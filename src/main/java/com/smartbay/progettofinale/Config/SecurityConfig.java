@@ -29,12 +29,12 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests((authorize) -> 
-            authorize.requestMatchers("/register/**").permitAll()
-            .requestMatchers("/css/**").permitAll()
-            .requestMatchers("/admin/dashboars", "/categories/create", "/categories/edit/{id}", "/categories/update/{id}", "/categories/delete/{id}").hasRole("ADMIN")
-            .requestMatchers("/revisor/dashboars", "/revisor/detail/{id}", "/accept").hasRole("REVISOR")
-            .requestMatchers("/seller/dashboars", "/articles/create", "/articles/edit/{id}", "/articles/update/{id}", "/articles/delete/{id}").hasRole("SELLER")
-            .requestMatchers("/register", "/", "/articles", "/images/**", "/articles/detail/**", "/categories/search/{id}", "/search/{id}", "/articles/search").permitAll().anyRequest().authenticated())
+            authorize.requestMatchers("/register/**", "/login").permitAll()
+            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+            .requestMatchers("/admin/dashboard", "/categories/create", "/categories/edit/{id}", "/categories/update/{id}", "/categories/delete/{id}").hasRole("ADMIN")
+            .requestMatchers("/revisor/dashboard", "/revisor/detail/{id}", "/accept").hasRole("REVISOR")
+            .requestMatchers("/seller/dashboard", "/articles/create", "/articles/edit/{id}", "/articles/update/{id}", "/articles/delete/{id}").hasRole("SELLER")
+            .requestMatchers("/register", "/", "/articles",  "/images/**", "/articles/detail/**", "/categories/search/{id}", "/search/{id}", "/articles/search").permitAll().anyRequest().authenticated())
             .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/").permitAll())
             .logout(logout -> logout
             .logoutUrl("/logout")
