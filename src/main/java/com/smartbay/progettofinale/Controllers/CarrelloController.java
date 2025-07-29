@@ -15,8 +15,6 @@ import com.smartbay.progettofinale.DTO.CarrelloDTO;
 import com.smartbay.progettofinale.DTO.AggiornaArticoloCarrelloRequest;
 import com.smartbay.progettofinale.Security.SecurityService;
 import com.smartbay.progettofinale.Services.CarrelloService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -51,57 +49,24 @@ public class CarrelloController {
   }
 
 
-  /**
-   * Metodo per aggiungere un articolo al carrello dalla pagina articolo.
-   * 
-   * Questa azione viene invocata quando l'utente aggiunge un nuovo prodotto dalla pagina di
-   * dettaglio articolo.
-   * 
-   * Dopo l'aggiunta, si effettua il redirect alla pagina articolo per mantenere il contesto e
-   * permettere all'utente di continuare la navigazione da lì.
-   * 
-   * @param idArticolo ID dell'articolo da aggiungere
-   * @param quantita Quantità da aggiungere
-   * @return redirect alla pagina articolo
-   */
-  @PostMapping("/add")
-  public String aggiungiAlCarrelloDaArticolo(
-      @ModelAttribute AggiornaArticoloCarrelloRequest request,
-      RedirectAttributes redirectAttributes) {
 
-    Long idUtente = securityService.getActiveUserId();
-    carrelloService.aggiornaQuantitaArticolo(idUtente, request.getIdArticolo(),
-        request.getCambiamentoQuantita());
-    redirectAttributes.addFlashAttribute("aggiuntaSuccess", true);
-
-    // Redirect per rimanere nella pagina dettaglio articolo dopo l'aggiunta
-    return "redirect:/articles/detail/" + request.getIdArticolo() + "#dettaglio-articolo";
+  @PostMapping("/add/{id}")
+  public ResponseEntity<String> aggiungiUnArticolo(@PathVariable("id") Long idArticolo) {
+    return aggiornaQuantitaCarrello(idArticolo, +1);
   }
 
-  /**
-   * Metodo per aggiornare la quantità di un articolo nel carrello, dalla pagina carrello stessa.
-   * 
-   * Questa azione viene invocata quando l'utente modifica la quantità di un articolo direttamente
-   * nella pagina carrello.
-   * 
-   * Dopo l'aggiornamento, si effettua il redirect alla pagina carrello per permettere di
-   * visualizzare subito il carrello aggiornato senza cambiare contesto.
-   * 
-   * @param idArticolo ID dell'articolo da aggiornare
-   * @param cambiamentoQuantita Nuova quantità impostata dall'utente
-   * @return redirect alla pagina carrello
-   */
   @PostMapping("/update")
-  public String aggiornaQuantitaCarrello(@ModelAttribute AggiornaArticoloCarrelloRequest request,
-      RedirectAttributes redirectAttributes) {
+  public ResponseEntity<String> aggiornaQuantitaCarrello(
+      @RequestParam("id") Long idArticolo,
+      @RequestParam("changeInQuantity") int changeInQuantity
+    ) {
 
     Long idUtente = securityService.getActiveUserId();
-    carrelloService.aggiornaQuantitaArticolo(idUtente, request.getIdArticolo(),
-        request.getCambiamentoQuantita());
-    redirectAttributes.addFlashAttribute("aggiuntaSuccess", true);
 
-    // Redirect alla pagina carrello dopo l'aggiornamento
-    return "redirect:/carrello";
+    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo,
+        changeInQuantity);
+
+    return ResponseEntity.ok("Carrello Aggiornato");
   }
 
   /**
@@ -111,8 +76,8 @@ public class CarrelloController {
    * @param idArticolo l'ID dell'articolo da rimuovere
    * @return una redirezione alla pagina del carrello aggiornata
    */
-  @PostMapping("/remove/{idArticolo}")
-  public String rimuoviArticoloDaCarrello(@PathVariable Long idArticolo) {
+  @PostMapping("/remove")
+  public String rimuoviArticoloDaCarrello(@RequestParam("id") Long idArticolo) {
     Long idUtente = securityService.getActiveUserId();
     carrelloService.rimuoviArticolo(idUtente, idArticolo);
 
