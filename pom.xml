@@ -90,6 +90,14 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.2.2</version>
 		</dependency>
+
+		<!-- JUnit, Mockito, Spring test utils SOLO PER QUESTA BRANCH - NON MANDATE IN COMMIT -->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-test</artifactId>
+    		<scope>test</scope>
+ 	 	</dependency>
+
 	</dependencies>
 
 	<build>
