@@ -33,7 +33,7 @@ public class SecurityConfig {
             .requestMatchers("/css/**").permitAll()
             .requestMatchers("/admin/dashboars", "/categories/create", "/categories/edit/{id}", "/categories/update/{id}", "/categories/delete/{id}").hasRole("ADMIN")
             .requestMatchers("/revisor/dashboars", "/revisor/detail/{id}", "/accept").hasRole("REVISOR")
-            .requestMatchers("/writer/dashboars", "/articles/create", "/articles/edit/{id}", "/articles/update/{id}", "/articles/delete/{id}").hasRole("WRITER")
+            .requestMatchers("/seller/dashboars", "/articles/create", "/articles/edit/{id}", "/articles/update/{id}", "/articles/delete/{id}").hasRole("SELLER")
             .requestMatchers("/register", "/", "/articles", "/images/**", "/articles/detail/**", "/categories/search/{id}", "/search/{id}", "/articles/search").permitAll().anyRequest().authenticated())
             .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/").permitAll())
             .logout(logout -> logout
