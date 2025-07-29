@@ -34,7 +34,9 @@
                             <p class="card-text" th:text="${article.user.username}"></p>
                             <div class="d-flex justify-content-end align-items-center">
                                 <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="btn btn-secondary mx-1">Show</a>
-                                <a th:href="@{/carrello/add/{id}(id=${article.id})}" class="btn btn-secondary mx-1">Add</a>
+                                <form th:action="@{/carrello/add/{id}(id=${article.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-secondary mx-1">Add</button>
+                                </form>
                             </div>
                         </div>
                     </div>
