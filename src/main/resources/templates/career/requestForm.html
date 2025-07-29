@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}"></head>
+
+<body>
+
+    <head th:insert="~{index :: navbar}"></head>
+
+    <div class="min-vh-100 intest">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 my-5 d-flex justify-content-between align-items-center">
+                    <h1 th:text="${title}">Collaboration Request</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row mb-5 justify-content-center">
+                <div class="col-12">
+                    <form method="post" th:action="@{/operations/career/request/save}" th:object="${careerRequest}" enctype="multipart/form-data">
+                        <!-- Body for request -->
+                        <div class="mb-3">
+                            <label class="form-label" for="body">Reason of request:</label>
+                            <textarea id="body" class="form-control" th:field="*{body}" placeholder="Enter reason of request..."></textarea>
+                        </div>
+    
+                        <!-- Role Selector -->
+                        <div class="mb-3">
+                            <label for="role" class="form-label">For what role?</label>
+                            <select id="body" th:field="*{role}" class="form-select">
+                                <option th:each="role:${roles}" th:value="${role.id}" th:text="${#strings.substring(role.name, 5)}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-success">Submit Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <head th:insert="~{index :: footer}"></head>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+</body>
+
+</html>

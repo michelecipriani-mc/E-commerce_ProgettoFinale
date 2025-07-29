@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}">
+    <title>Login - SmartBay</title>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header th:insert="~{index :: navbar}"></header>
+
+    <!-- LOGIN -->
+    <div class="container d-flex justify-content-center align-items-center min-vh-100 py-5">
+        <div class="card shadow-lg p-4 w-100" style="max-width: 500px;">
+            <div class="text-center mb-4">
+                <div class="smartbay-header">SmartBay</div>
+                <p class="smartbay-subtext">Login to your account</p>
+            </div>
+
+            <!-- Messaggi di errore o logout -->
+            <div th:if="${param.error}">
+                <div class="alert alert-danger text-center">
+                    Invalid Email or Password... Try again!
+                </div>
+            </div>
+            <div th:if="${param.logout}">
+                <div class="alert alert-success text-center">
+                    Logged out successfully. See you soon!
+                </div>
+            </div>
+
+            <form method="post" role="form" th:action="@{/login}">
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Email Address" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" />
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-smartbay btn-lg">Login</button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <small>Not a member? <a th:href="@{/register}">Register here</a></small>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer th:insert="~{index :: footer}" class="smartbay-footer"></footer>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+
+</body>
+</html>
