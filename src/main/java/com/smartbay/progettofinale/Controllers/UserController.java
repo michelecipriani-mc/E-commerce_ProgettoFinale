@@ -149,12 +149,13 @@ public class UserController {
         return "revisor/dashboard";
     }
 
-    @GetMapping("/writer/dashboard")
+    @GetMapping("/seller/dashboard")
     public String writerDashboard(Model viewModel, Principal principal) {
         viewModel.addAttribute("title", "Your articles");
         List<ArticleDTO> userArticles =articleService.readAll().stream().filter(article -> article.getUser().getEmail().equals(principal.getName())).toList();
         viewModel.addAttribute("articles", userArticles);  
-        return "writer/dashboard";
+        return "seller/dashboard";
     }
     
 }
+
