@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import com.smartbay.progettofinale.DTO.AggiornaArticoloCarrelloRequest;
 import com.smartbay.progettofinale.DTO.ArticleDTO;
 import com.smartbay.progettofinale.DTO.CategoryDTO;
 import com.smartbay.progettofinale.Models.Article;
@@ -90,8 +90,12 @@ public class ArticleController {
 
     @GetMapping("detail/{id}")
     public String detailArticle(@PathVariable("id") Long id, Model viewModel) {
+
+        ArticleDTO article = articleService.read(id);
+
         viewModel.addAttribute("title", "Article detail");
-        viewModel.addAttribute("article", articleService.read(id));
+        viewModel.addAttribute("article", article);
+        viewModel.addAttribute("aggiornaRequest", new AggiornaArticoloCarrelloRequest(article.getId(), 1));
         return "article/detail";  
     }
 

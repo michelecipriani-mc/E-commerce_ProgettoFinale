@@ -1,5 +1,6 @@
 package com.smartbay.progettofinale.DTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.smartbay.progettofinale.Models.Category;
@@ -16,6 +17,7 @@ import lombok.Setter;
 public class ArticleDTO {
 
     private Long id;
+    private BigDecimal price;
     private String title;
     private String subtitle;
     private String body;

@@ -13,30 +13,42 @@
         <div class="card shadow-lg p-4">
             <h2 class="smartbay-header mb-4">Il tuo carrello</h2>
 
-            <!-- Se il carrello è vuoto -->
-            <div th:if="${#lists.isEmpty(carrello.articoli)}">
+            <!-- Cart empty check -->
+
+            <div th:if="${carrello.articoli == null or carrello.articoli.isEmpty()}">
                 <p>Il tuo carrello è vuoto.</p>
             </div>
 
-            <!-- Se il carrello contiene articoli -->
-            <div th:unless="${#lists.isEmpty(carrello.articoli)}">
-                <div th:each="articolo : ${carrello.articoli}" 
-                     class="d-flex justify-content-between align-items-center border-bottom py-2">
-                    
+            <!-- Cart with items -->
+            <div th:unless="${carrello.articoli == null or carrello.articoli.isEmpty()}">
+                <!-- Iterate over CarrelloDTO entries -->
+                <div th:each="item : ${carrello.articoli}" class="...">
                     <div>
-                        <strong th:text="${articolo.nome}">Nome Articolo</strong><br>
-                        <small>Prezzo: €<span th:text="${articolo.prezzo}">0.00</span></small><br>
+                        <strong th:text="${item.articolo.title}">Nome Articolo</strong><br>
+                        <small>Prezzo: €<span th:text="${item.articolo.price}">0.00</span></small><br>
 
-                        <form th:action="@{/carrello/update}" method="post" class="d-flex align-items-center mt-1">
-                            <input type="hidden" name="idArticolo" th:value="${articolo.id}" />
-                            <input type="number" min="1" name="cambiamentoQuantita" th:value="${articolo.quantita}" class="form-control form-control-sm me-2" style="width: 80px;" />
-                            <button type="submit" class="btn btn-sm btn-outline-primary">Aggiorna</button>
+                        <form th:action="@{/carrello/update}" method="post" class="...">
+                            <input type="hidden" name="idArticolo" th:value="${item.articolo.id}" />
+                            <input type="hidden" name="cambiamentoQuantita" th:value="-5" />
+                            <!-- Will be changed by button -->
+                            <button type="submit" class="btn btn-sm btn-outline-danger">🗑</button>
+                        </form>
+
+                        <!-- Quantity Control -->
+                        <form th:action="@{/carrello/update}" method="post" class="d-inline-flex">
+                            <input type="hidden" name="idArticolo" th:value="${item.articolo.id}" />
+                            <input type="hidden" name="cambiamentoQuantita" value="-1" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+                        </form>
+
+                        <span class="mx-2" th:text="${item.quantita}">1</span>
+
+                        <form th:action="@{/carrello/update}" method="post" class="d-inline-flex">
+                            <input type="hidden" name="idArticolo" th:value="${item.articolo.id}" />
+                            <input type="hidden" name="cambiamentoQuantita" value="1" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
                         </form>
                     </div>
-
-                    <form th:action="@{/carrello/remove/{id}(id=${articolo.id})}" method="post">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Rimuovi</button>
-                    </form>
                 </div>
 
                 <!-- Totale -->
