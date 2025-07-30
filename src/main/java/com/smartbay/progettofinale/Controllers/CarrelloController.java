@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +65,38 @@ public class CarrelloController {
     carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, changeInQuantity);
 
     return ResponseEntity.ok("Carrello Aggiornato");
+  }
+
+  /**
+   * Metodo per aggiungere un articolo dalla lista di tutti gli articoli. 
+   * Accoglie request HTMX.
+   */
+  @PostMapping("/htmx-add/{id}")
+  @ResponseBody
+  public String aggiungiUnoDaArticoli(@PathVariable("id") Long idArticolo) {
+    Long idUtente = securityService.getActiveUserId();
+                               
+    String notificationHtml = "";
+
+    try {
+      carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, +1);
+
+      // Success HTML for HTMX
+      notificationHtml = "<div class=\"alert alert-success\" "
+          + "style=\"opacity: 1; transition: opacity 1s ease-out; margin-top: 15px; text-align: center;\" "
+          + "hx-delete=\"true\" hx-trigger=\"load delay:3s\">"
+          + "<p>Item added to cart successfully!</p>" + "</div>";
+
+    } catch (Exception ex) {
+      // Error HTML for HTMX with the exception message
+      notificationHtml = "<div class=\"alert alert-warning\" " + // Changed to alert-warning for
+                                                                 // warning
+          "style=\"opacity: 1; transition: opacity 1s ease-out; margin-top: 15px; text-align: center;\" "
+          + "hx-delete=\"true\" hx-trigger=\"load delay:5s\">" + // Slightly longer delay for errors
+          "<p>Error: " + ex.getMessage() + "</p>" + "</div>";
+    }
+
+    return notificationHtml;
   }
 
   // aggiunta articoli da menu a tendina in pagina details
