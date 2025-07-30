@@ -40,27 +40,32 @@
                     <div>
                         <strong th:text="${item.articolo.title}">Nome Articolo</strong><br>
                         <small>Prezzo: €<span th:text="${item.articolo.price}">0.00</span></small><br>
-
+                
                         <!-- Quantity Control -->
-                        <!-- Remove all and refresh page -->
-                        <form th:action="@{/carrello/remove(id=${item.articolo.id}, changeInQuantity=-1)}" method="post">
+                        <!-- Remove all copies of an article -->
+                        <form th:action="@{/carrello/removeall/{id}(id=${item.articolo.id})}" method="post">
                             <button type="submit" class="btn btn-sm btn-outline-danger">🗑</button>
                         </form>
-
+                
                         <!-- Remove one -->
-                        <form th:action="@{/carrello/update(id=${item.articolo.id}, changeInQuantity=-1)}" method="post">
+                        <form th:action="@{/carrello/removeone/{id}(id=${item.articolo.id})}" method="post">
                             <button type="submit" class="btn btn-secondary mx-1">-</button>
                         </form>
-
+                
+                        <!-- Display quantity -->
                         <span class="mx-2" th:text="${item.quantita}">1</span>
-
+                
                         <!-- Add one -->
-                        <form th:action="@{/carrello/add/{id}(id=${item.articolo.id})}" method="post">
+                        <form th:action="@{/carrello/addone/{id}(id=${item.articolo.id})}" method="post">
                             <button type="submit" class="btn btn-secondary mx-1">+</button>
                         </form>
-
+                
                     </div>
                 </div>
+                
+                <!-- Clear all articles -->
+                <form th:action="@{/carrello/clear}" method="post">
+                    <button type="submit" class="btn btn-danger">Clear Cart</button>         </form>
 
                 <!-- Totale -->
                 <div class="d-flex justify-content-between mt-4 border-top pt-3">

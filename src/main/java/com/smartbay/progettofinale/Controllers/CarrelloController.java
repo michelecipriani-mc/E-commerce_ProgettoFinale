@@ -94,10 +94,12 @@ public class CarrelloController {
    * @param idArticolo l'ID dell'articolo da rimuovere
    * @return una redirezione alla pagina del carrello aggiornata
    */
-  @PostMapping("/remove")
-  public String rimuoviArticoloDaCarrello(@RequestParam("id") Long idArticolo) {
+  @PostMapping("/removeall/{id}")
+  public String rimuoviArticoloDaCarrello(@PathVariable("id") Long idArticolo,
+  RedirectAttributes redirectAttributes) {
     Long idUtente = securityService.getActiveUserId();
     carrelloService.rimuoviArticolo(idUtente, idArticolo);
+    redirectAttributes.addFlashAttribute("cartSuccess", "Cart Updated");
 
     // Dopo la rimozione, redireziona alla pagina del carrello
     return "redirect:/carrello";
@@ -105,15 +107,17 @@ public class CarrelloController {
 
   /**
    * Rimuove un singolo articolo dal carrello dell'utente corrente. Questo endpoint è usato dal
-   * pulsante del cestino in Thymeleaf.
+   * pulsante (-) nella pagina carrello
    *
    * @param idArticolo l'ID dell'articolo da rimuovere
    * @return una redirezione alla pagina del carrello aggiornata
    */
-  @PostMapping("/removeone")
-  public String rimuoviUnoDaCarrello(@RequestParam("id") Long idArticolo) {
+  @PostMapping("/removeone/{id}")
+  public String rimuoviUnoDaCarrello(@PathVariable("id") Long idArticolo,
+  RedirectAttributes redirectAttributes) {
     Long idUtente = securityService.getActiveUserId();
     carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, -1);
+    redirectAttributes.addFlashAttribute("cartSuccess", "Cart Updated");
 
     // Dopo la rimozione, redireziona alla pagina del carrello
     return "redirect:/carrello";
@@ -121,15 +125,22 @@ public class CarrelloController {
 
   /**
    * Aggiunge un singolo articolo dal carrello dell'utente corrente. Questo endpoint è usato dal
-   * pulsante del cestino in Thymeleaf.
+   * pulsante (+) nella pagina carrello
    *
    * @param idArticolo l'ID dell'articolo da rimuovere
    * @return una redirezione alla pagina del carrello aggiornata
    */
-  @PostMapping("/addone")
-  public String aggiungiUnoDaCarrello(@RequestParam("id") Long idArticolo) {
+  @PostMapping("/addone/{id}")
+  public String aggiungiUnoDaCarrello(@PathVariable("id") Long idArticolo, 
+      RedirectAttributes redirectAttributes) {
     Long idUtente = securityService.getActiveUserId();
-    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, +1);
+    redirectAttributes.addFlashAttribute("cartSuccess", "Cart Updated");
+
+    try {
+      carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, +1);
+    } catch (Exception ex) {
+      redirectAttributes.addFlashAttribute("cartWarning", ex.getMessage());
+    }
 
     // Dopo la rimozione, redireziona alla pagina del carrello
     return "redirect:/carrello";
@@ -137,9 +148,11 @@ public class CarrelloController {
 
   // Svuota l'intero carrello
   @PostMapping("/clear")
-  public String svuotaCarrello() {
+  public String svuotaCarrello(RedirectAttributes redirectAttributes) {
     Long idUtente = securityService.getActiveUserId();
     carrelloService.svuotaCarrello(idUtente);
+    redirectAttributes.addFlashAttribute("cartSuccess", "Cart Updated");
+
     return "redirect:/carrello";
   }
 }
