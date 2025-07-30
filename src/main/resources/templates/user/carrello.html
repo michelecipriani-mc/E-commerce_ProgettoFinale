@@ -115,7 +115,9 @@
                     <form th:action="@{/carrello/clear}" method="post">
                         <button type="submit" class="btn btn-danger">Svuota carrello</button>
                     </form>
-                    <button class="btn btn-success">Procedi al checkout</button>
+                    <form th:action="@{/ordini/conferma}" method="post">
+                        <button type="submit" class="btn btn-success">Procedi al checkout</button>        
+                    </form>
                 </div>
             </div>
         </div>
