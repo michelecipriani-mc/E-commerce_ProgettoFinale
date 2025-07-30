@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.smartbay.progettofinale.Models.Ordine;
-import com.smartbay.progettofinale.Models.User;
+import com.smartbay.progettofinale.DTO.OrdineDTO;
 import com.smartbay.progettofinale.Security.SecurityService;
 import com.smartbay.progettofinale.Services.OrdineService;
 
@@ -25,13 +23,13 @@ public class OrdineController {
     }
 
     @PostMapping("/conferma")
-    public ResponseEntity<Ordine> confermaOrdine() {
-        Ordine ordine = ordineService.creaOrdine();
+    public ResponseEntity<OrdineDTO> confermaOrdine() {
+        OrdineDTO ordine = ordineService.creaOrdine();
         return ResponseEntity.ok(ordine);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Ordine>> getOrdiniUtente() {
+    public ResponseEntity<List<OrdineDTO>> getOrdiniUtente() {
         return ResponseEntity.ok(ordineService.getOrdiniUtente());
     }
 }

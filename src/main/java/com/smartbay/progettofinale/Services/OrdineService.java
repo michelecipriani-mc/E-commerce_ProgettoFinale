@@ -1,5 +1,7 @@
 package com.smartbay.progettofinale.Services;
 
+import com.smartbay.progettofinale.DTO.ArticoloQuantitaDTO;
+import com.smartbay.progettofinale.DTO.OrdineDTO;
 import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.ArticoloOrdine;
 import com.smartbay.progettofinale.Models.Carrello;
@@ -10,6 +12,7 @@ import com.smartbay.progettofinale.Repositories.OrdineRepository;
 import com.smartbay.progettofinale.Repositories.UserRepository;
 import com.smartbay.progettofinale.Security.SecurityService;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,19 +28,21 @@ public class OrdineService {
     private final OrdineRepository ordineRepository;
     private final UserRepository userRepository;
     private final SecurityService securityService;
+    private final ModelMapper modelMapper;
 
     public OrdineService(CarrelloService carrelloService, ArticleRepository articleRepository,
-                         OrdineRepository ordineRepository, UserRepository userRepository, SecurityService securityService) {
+                         OrdineRepository ordineRepository, UserRepository userRepository, SecurityService securityService, ModelMapper modelMapper) {
         this.carrelloService = carrelloService;
         this.articleRepository = articleRepository;
         this.ordineRepository = ordineRepository;
         this.userRepository = userRepository;
         this.securityService = securityService;
+        this.modelMapper = modelMapper;
     }
 
     //METODO CREA ORDINE AGGIORNATO CON SCALO DALLA BALANCE
     @Transactional
-    public Ordine creaOrdine() {
+    public OrdineDTO creaOrdine() {
 
     // Obtain instance of active user
     User userInstance = securityService.getActiveUser();
@@ -91,17 +96,36 @@ public class OrdineService {
     user.setBalance(nuovoSaldo);
 
     // poi salva ordine e utente (per aggiornare la balance)
-    ordineRepository.save(ordine);
+    Ordine ordineAggiornato = ordineRepository.save(ordine);
     userRepository.save(user);
 
     // svuota il carrello
     carrelloService.svuotaCarrello(user.getId());
 
-    return ordine;
+    return EntityToDTO(ordineAggiornato);
 }
 
-    public List<Ordine> getOrdiniUtente() {
+    public List<OrdineDTO> getOrdiniUtente() {
         User user = securityService.getActiveUser();
-        return ordineRepository.findByUser(user);
+
+        return ordineRepository.findByUser(user).stream()
+            .map(this::EntityToDTO)
+            .collect(Collectors.toList());
+    }
+
+    public OrdineDTO EntityToDTO(Ordine ordine) {
+        if (ordine == null) {
+            return null;
+        }
+
+        OrdineDTO dto = modelMapper.map(ordine, OrdineDTO.class);
+
+        dto.setArticoli(ordine.getArticoli().stream()
+            .map((x) -> modelMapper.map(x, ArticoloQuantitaDTO.class))
+            .collect(Collectors.toList()));
+
+        return dto;
     }
 }
+
+
