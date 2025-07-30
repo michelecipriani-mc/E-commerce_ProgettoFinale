@@ -49,25 +49,102 @@ public class CarrelloController {
   }
 
 
-
+  
   @PostMapping("/add/{id}")
-  public ResponseEntity<String> aggiungiUnArticolo(@PathVariable("id") Long idArticolo) {
-    return aggiornaQuantitaCarrello(idArticolo, +1);
+  @ResponseBody
+  public String aggiungiUnArticolo(@PathVariable("id") Long idArticolo, Model model) {
+    try {
+      aggiornaQuantitaCarrello(idArticolo, +1);
+
+      // Return di frammento Thymeleaf (notifica dissolvente) come conferma
+      System.out.println("added to cart");
+      return "<div>aggiunto</div>";
+      //return toastMessage("✅ Aggiunto al carrello");
+
+    } catch (Exception e) {
+      System.out.println("too many articles");
+      return "<div>non aggiunto</div>";
+      //return toastError(e.getMessage());
+    }
+
   }
 
+  
+ /* @PostMapping("/add")
+  public String addToCart(@RequestParam Long id, Model model) {
+    try {
+      aggiornaQuantitaCarrello(id, +1);
+
+      model.addAttribute("message", "Product added to cart successfully!");
+      model.addAttribute("type", "success");
+    } catch (Exception e) {
+      model.addAttribute("message", "Error adding product to cart: " + e.getMessage());
+      model.addAttribute("type", "error");
+    }
+    // This will resolve to src/main/resources/templates/fragments/cart-message.html
+    return "fragments/cart-message";
+  }*/
+
+
+
+  private String toastMessage(String message) {
+    return """
+        <div class='toast align-items-center text-white bg-success border-0 show mb-2 fade show'
+             role='alert' aria-live='assertive' aria-atomic='true'
+             style='position: fixed; bottom: 2rem; right: 2rem; min-width: 200px; z-index: 1080;
+                    animation: fadeout 0.5s ease-out 3s forwards, slideup 0.5s ease-out 3s forwards;'>
+            <div class='d-flex'>
+                <div class='toast-body'>"""
+        + message + """
+                    </div>
+                </div>
+            </div>
+            """;
+  }
+
+  private String toastError(String message) {
+    return """
+        <div class='toast align-items-center text-white bg-danger border-0 show mb-2 fade show'
+             role='alert' aria-live='assertive' aria-atomic='true'
+             style='position: fixed; bottom: 2rem; right: 2rem; min-width: 200px; z-index: 1080;
+                    animation: fadeout 0.5s ease-out 3s forwards, slideup 0.5s ease-out 3s forwards;'>
+            <div class='d-flex'>
+                <div class='toast-body'>
+                    ❌ Errore: """
+        + message + """
+                    </div>
+                </div>
+            </div>
+            """;
+  }
+
+
   @PostMapping("/update")
-  public ResponseEntity<String> aggiornaQuantitaCarrello(
-      @RequestParam("id") Long idArticolo,
-      @RequestParam("changeInQuantity") int changeInQuantity
-    ) {
+  @ResponseBody
+  public String aggiornaQuantitaCarrello(@RequestParam("id") Long idArticolo,
+      @RequestParam("changeInQuantity") int changeInQuantity) {
 
     Long idUtente = securityService.getActiveUserId();
 
-    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo,
-        changeInQuantity);
+    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, changeInQuantity);
 
-    return ResponseEntity.ok("Carrello Aggiornato");
+    return "✓ Carrello Aggiornato";
   }
+
+
+  @PostMapping("/htmx/add")
+  public String aggiungiArticoloHTMX(@RequestParam("id") Long idArticolo,
+      @RequestParam("changeInQuantity") int quantita, Model model) {
+
+    Long idUtente = securityService.getActiveUserId();
+    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, quantita);
+
+    int numeroArticoli = carrelloService.getNumeroArticoliNelCarrello(idUtente);
+    model.addAttribute("numeroArticoli", numeroArticoli);
+
+    return "fragments/cart-badge :: badge"; // Return the updated badge
+  }
+
 
   /**
    * Rimuove un articolo dal carrello dell'utente corrente. Questo endpoint è usato dal pulsante del
