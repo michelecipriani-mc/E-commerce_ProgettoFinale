@@ -11,15 +11,16 @@
     <header th:insert="~{index :: navbar}"></header>
 
     <div class="min-vh-100">
-        <div th:if="${cartSuccess}">
+
+        <div th:if="${cartSuccess != null and cartWarning == null}">
             <div class="alert alert-success errorMessage mt-3">
                 <p th:text="${cartSuccess}"></p>
             </div>
         </div>
 
-        <div th:if="${successMessage}">
-            <div class="alert alert-success errorMessage">
-                <p th:text="${successMessage}"></p>
+        <div th:if="${cartWarning != null}">
+            <div class="alert alert-warning errorMessage mt-3">
+                <p th:text="${cartWarning}"></p>
             </div>
         </div>
 

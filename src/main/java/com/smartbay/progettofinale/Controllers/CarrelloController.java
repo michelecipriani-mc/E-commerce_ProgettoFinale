@@ -67,6 +67,7 @@ public class CarrelloController {
     return ResponseEntity.ok("Carrello Aggiornato");
   }
 
+  // aggiunta articoli da menu a tendina in pagina details
   @PostMapping("/dropdownadd/{id}")
   public String addArticleFromDropdown(@PathVariable("id") Long idArticolo,
       @RequestParam("quantity") int quantity, RedirectAttributes redirectAttributes) {
