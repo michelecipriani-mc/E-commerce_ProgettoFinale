@@ -33,7 +33,7 @@
                     <form class="input-group w-auto my-auto d-none d-sm-flex" th:action="@{/articles/search}" method="get">
                         <input type="search" class="form-control rounded me-2" placeholder="Search" name="keyword"
                             aria-label="Search">
-                        <button class="btn btn-outline-secondary rounded-pill" type="submit">
+                        <button class="btn btn-smartbay rounded-pill" type="submit">
                             <i class="fas fa-search fa-sm"></i>
                         </button>
                     </form>
@@ -51,7 +51,7 @@
                         <!-- Article's index -->
                         <li class="nav-item me-3 me-lg-1">
                             <a class="nav-link" th:href="@{/articles}">
-                                <i class="fa-solid fa-newspaper fa-lg"></i>
+                                <i class="fa-solid fa-bag-shopping fa-lg"></i>
                             </a>
                         </li>
                         <!-- Register -->
@@ -76,7 +76,7 @@
                         <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item me-3 me-lg-1">
                             <div class="d-flex">
                                 <a class="nav-link" th:href="@{/admin/dashboard}">
-                                    <i class="fas fa-bell fa-lg"></i>
+                                    <i class="fa-solid fa-user-tie fa-lg"></i>
                                     <span th:if="${careerRequests > 0}" class="badge rounded-pill bg-danger text-white"
                                         th:text="${careerRequests}"></span>
                                 </a>
@@ -96,7 +96,7 @@
                         <li sec:authorize="hasRole('ROLE_SELLER')" class="nav-item me-3 me-lg-1">
                             <div class="d-flex">
                                 <a class="nav-link" th:href="@{/seller/dashboard}">
-                                    <i class="fas fa-bell fa-lg"></i>
+                                    <i class="fa-solid fa-shop fa-lg"></i>
                                     <span th:if="${articlesToBeRevised > 0}" class="badge rounded-pill bg-danger text-white"
                                         th:text="${articlesToBeRevised}"></span>
                                 </a>
@@ -188,7 +188,7 @@
             <!-- Work request -->
             <section class="mb-4">
                 <h5>Work with us!</h5>
-                <a th:href="@{/operations/career/request}" class="btn colorFooterWorkButton">Submit</a>
+                <a th:href="@{/operations/career/request}" class="btn btn-smartbay">Submit</a>
             </section>
 
             <!-- Section: Links -->
@@ -208,11 +208,11 @@
                                 </ul>
                             </li>
                             <li>
-                                <p class="text-body" href="#!">Delivery</p>
+                                <p class="text-body">Delivery</p>
                                 <img th:src="@{/images/swift_parcel.png}" width="40" height="40" class="img-fluid">
                             </li>
                             <li>
-                                <p class="text-body text-white" href="#!">Payment Methods</p>
+                                <p class="text-body text-white">Payment Methods</p>
                                 <img th:src="@{/images/mobile_payment_app.png}" width="40" height="40" class="rounded img-fluid">
                                 <br>
                                 <img th:src="@{/images/payment_app.png}" width="40" height="40" class="rounded mt-1 img-fluid">

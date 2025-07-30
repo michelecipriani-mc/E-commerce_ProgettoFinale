@@ -47,16 +47,16 @@
 
                 <!-- Form for adding balance -->
                 <form th:action="@{/addbalance}" th:method="post"
-                    class="mb-3 d-flex justify-content-between align-items-center">
-                    <div class="flex-grow-1 me-2">
+                    class="mb-3 d-flex flex-column w-100 justify-content-center align-items-center">
+                    <div class="flex-grow-1 me-2 w-100 mb-3">
                         <input type="number" step="0.01" class="form-control input1" id="amount" name="amount"
                             placeholder="Enter amount to add" required />
                     </div>
-                    <button type="submit" class="btn btn-smartbay btn-lg">Add Balance</button>
+                    <button type="submit" class="btn btn-smartbay btn-lg w-100 rounded">Add Balance</button>
                 </form>
 
-                <div class="mb-3 d-flex justify-content-between">
-                    <a th:href="@{/articles}" class="btn btn-success btn-lg mx-1">Go to Shop</a>
+                <div class="mb-3 d-flex justify-content-center w-100">
+                    <a th:href="@{/articles}" class="btn btn-success btn-lg w-100 rounded">Go to Shop</a>
                 </div>
             </div>
         </div>
