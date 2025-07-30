@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.smartbay.progettofinale.DTO.ArticleDTO;
-import com.smartbay.progettofinale.DTO.PersonalInfoDTO;
 import com.smartbay.progettofinale.DTO.UserDTO;
 import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.User;
