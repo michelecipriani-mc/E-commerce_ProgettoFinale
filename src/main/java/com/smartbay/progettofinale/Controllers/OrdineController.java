@@ -33,7 +33,7 @@ public class OrdineController {
         return ResponseEntity.ok(ordine);
     }
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<List<Ordine>> getOrdiniUtente() {
         User utente = securityService.getActiveUser();
         return ResponseEntity.ok(ordineService.getOrdiniUtente(utente));

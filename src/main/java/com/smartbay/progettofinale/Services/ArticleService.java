@@ -3,11 +3,9 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,53 +33,50 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
     @Autowired
     private ImageService imageService;
 
+    
     @Override
     public ArticleDTO create(Article article, Principal principal, MultipartFile file) {
-        String url = "";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            User user = (userRepository.findById(userDetails.getId())).get();
+        if (principal != null) {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             article.setUser(user);
         }
 
+        article.setIsAccepted(null);
+        Article savedArticle = articleRepository.save(article); // salvo prima per avere ID
+
         if (file != null && !file.isEmpty()) {
             try {
-                CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
-                url = futureUrl.get();
+                String imagePath = imageService.saveImageOnDisk(file).get(); // salva su disco
+                imageService.saveImageOnDB(imagePath, savedArticle);         // salva il path nel DB
             } catch (Exception e) {
                 e.printStackTrace();
+                throw new RuntimeException("Failed to save image", e);
             }
         }
 
-        article.setIsAccepted(null);
-
-        ArticleDTO dto = modelMapper.map(articleRepository.save(article), ArticleDTO.class);
-        if (file != null && !file.isEmpty()) {
-            imageService.saveImageOnDB(url, article);
-        }
-        
-        return dto;
+        return modelMapper.map(savedArticle, ArticleDTO.class);
     }
+
 
     @Override
     public void delete(Long key) {
-        if (articleRepository.existsById(key)) {
-            Article article = articleRepository.findById(key).get();
-            try {
-                if (article.getImage() != null) {
-                    String path = article.getImage().getPath();
-                    article.getImage().setArticle(null);
-                    imageService.deleteImage(path); 
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        Article article = articleRepository.findById(key)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        try {
+            if (article.getImage() != null) {
+                String path = article.getImage().getPath();
+                article.getImage().setArticle(null); // disaccoppia
+                imageService.deleteImage(path);
             }
-            articleRepository.deleteById(key);
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        articleRepository.deleteById(key);
     }
+
 
     @Override
     public ArticleDTO read(Long key) {
@@ -104,37 +99,45 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
 
     @Override
     public ArticleDTO update(Long key, Article updatedArticle, MultipartFile file) {
-        String url = "";
-        if (articleRepository.existsById(key)) {
-            updatedArticle.setId(key);
-            Article article = articleRepository.findById(key).get();
-            updatedArticle.setUser(article.getUser());
-            if (file != null && !file.isEmpty()) {
-                try {
-                    if (article.getImage() != null) {
-                        imageService.deleteImage(article.getImage().getPath());
-                    }
-                    CompletableFuture<String> futureUrl = imageService.saveImageOnCloud(file);
-                    url = futureUrl.get();
-                    imageService.saveImageOnDB(url, updatedArticle);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("Failed to update image", e);
-                }
-            } else if (article.getImage() != null) {
-                updatedArticle.setImage(article.getImage());
-            }
-
-            if (!updatedArticle.equals(article)) {
-                updatedArticle.setIsAccepted(null);
-            } else {
-                updatedArticle.setIsAccepted(article.getIsAccepted());
-            }
-            return modelMapper.map(articleRepository.save(updatedArticle), ArticleDTO.class);
-        } else {
+        if (!articleRepository.existsById(key)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
+        Article existingArticle = articleRepository.findById(key).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        updatedArticle.setId(key);
+        updatedArticle.setUser(existingArticle.getUser());
+
+        // Gestione immagine
+        try {
+            if (file != null && !file.isEmpty()) {
+                // Elimina immagine precedente se esiste
+                if (existingArticle.getImage() != null) {
+                    imageService.deleteImage(existingArticle.getImage().getPath());
+                }
+
+                // Salva nuova immagine
+                String newImagePath = imageService.saveImageOnDisk(file).get();
+                imageService.saveImageOnDB(newImagePath, updatedArticle);
+            } else if (existingArticle.getImage() != null) {
+                // Mantieni immagine esistente
+                updatedArticle.setImage(existingArticle.getImage());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to handle image update", e);
+        }
+
+        // Verifica se sono stati fatti cambiamenti
+        if (!updatedArticle.equals(existingArticle)) {
+            updatedArticle.setIsAccepted(null); // deve essere ri-approvato
+        } else {
+            updatedArticle.setIsAccepted(existingArticle.getIsAccepted());
+        }
+
+        Article saved = articleRepository.save(updatedArticle);
+        return modelMapper.map(saved, ArticleDTO.class);
     }
+
 
     public List<ArticleDTO> searchByCategory(Category category) {
         List<ArticleDTO> dtos = new ArrayList<ArticleDTO>();

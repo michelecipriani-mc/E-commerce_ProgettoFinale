@@ -95,7 +95,7 @@
                         <!-- Writer Role -->
                         <li sec:authorize="hasRole('ROLE_SELLER')" class="nav-item me-3 me-lg-1">
                             <div class="d-flex">
-                                <a class="nav-link" th:href="@{/writer/dashboard}">
+                                <a class="nav-link" th:href="@{/seller/dashboard}">
                                     <i class="fas fa-bell fa-lg"></i>
                                     <span th:if="${articlesToBeRevised > 0}" class="badge rounded-pill bg-danger text-white"
                                         th:text="${articlesToBeRevised}"></span>
@@ -111,12 +111,18 @@
                         <!-- Profile -->
                         <li sec:authorize="isAuthenticated" class="nav-item me-3 me-lg-1">
                             <!-- Profile Foto -->
-                            <a class="nav-link d-sm-flex align-items-sm-center" href="#">
+                            <a class="nav-link d-sm-flex align-items-sm-center" th:href="@{/user/dashboard}">
                                 <span><i class="fa-solid fa-circle-user fa-lg"></i></span>
                                 <!-- Profile name -->
                                 <strong sec:authorize="isAuthenticated"
                                     th:text="${#authentication.principal.fullname} + ' - ' + ${#authentication.principal.authorities[0].authority.replace('ROLE_', '')}"
                                     class="d-none d-sm-block ms-1"></strong>
+                            </a>
+                        </li>
+                        <!-- Carrello -->
+                        <li sec:authorize="hasRole('ROLE_USER')" class="nav-item me-3 me-lg-1">
+                            <a class="nav-link" th:href="@{/carrello}">
+                                <i class="fa-solid fa-cart-shopping"></i>
                             </a>
                         </li>
                         <!-- Logout -->
@@ -194,26 +200,26 @@
 
                         <ul class="list-unstyled mb-0 d-flex justify-content-between">
                             <li>
-                                <p class="text-body">Contatti</p>
+                                <p class="text-body text-white">Contacts</p>
                                 <ul class="lifooter">
-                                    <li class="text-start"><i class="fas fa-phone me-3"></i>+ 01 234 567 88</li>
+                                    <li class="text-start"><i class="fas fa-phone me-3"></i>+39 378 2157 454</li>
                                     <li class="text-start"><i class="fas fa-home me-3"></i>New York, NY 10012, US</li>
-                                    <li class="text-start"><i class="fas fa-envelope me-3"></i>info@example.com</li>
+                                    <li class="text-start"><i class="fas fa-envelope me-3"></i>admin@smartbay.com</li>
                                 </ul>
                             </li>
                             <li>
-                                <p class="text-body" href="#!">Consegna</p>
-                                <img th:src="@{images/swift_parcel.png}" width="40" height="40" class="img-fluid">
+                                <p class="text-body" href="#!">Delivery</p>
+                                <img th:src="@{/images/swift_parcel.png}" width="40" height="40" class="img-fluid">
                             </li>
                             <li>
-                                <p class="text-body" href="#!">MDP</p>
-                                <img th:src="@{images/mobile_payment_app.png}" width="40" height="40" class="rounded img-fluid">
+                                <p class="text-body text-white" href="#!">Payment Methods</p>
+                                <img th:src="@{/images/mobile_payment_app.png}" width="40" height="40" class="rounded img-fluid">
                                 <br>
-                                <img th:src="@{images/payment_app.png}" width="40" height="40" class="rounded mt-1 img-fluid">
+                                <img th:src="@{/images/payment_app.png}" width="40" height="40" class="rounded mt-1 img-fluid">
                             </li>
                             <li>
-                                <p class="text-body">Scaricare app</p>
-                                <img th:src="@{images/dpwnload_app.png}" width="180" height="100">
+                                <p class="text-body">App Store</p>
+                                <img th:src="@{/images/dpwnload_app.png}" width="180" height="100">
                             </li>
                         </ul>
                     </div>

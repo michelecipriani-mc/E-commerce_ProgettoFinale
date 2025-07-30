@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.smartbay.progettofinale.DTO.ArticleDTO;
-import com.smartbay.progettofinale.DTO.PersonalInfoDTO;
 import com.smartbay.progettofinale.DTO.UserDTO;
 import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.User;
@@ -23,7 +23,7 @@ import com.smartbay.progettofinale.Repositories.CareerRequestRepository;
 import com.smartbay.progettofinale.Services.ArticleService;
 import com.smartbay.progettofinale.Services.CategoryService;
 import com.smartbay.progettofinale.Services.UserService;
-
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,6 +91,26 @@ public class UserController {
 
         return "user/dashboard"; // Corrisponde al file templates/user/dashboard.html
     }
+
+    @PostMapping("/addbalance")
+    public String addBalance(@RequestParam("amount") BigDecimal amount, Model viewModel, 
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            userService.addBalance(amount);
+            redirectAttributes.addFlashAttribute("paymentSuccess", "Balance Updated");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("paymentWarning", ex.getMessage());
+        }
+
+        // Aggiunge al modello le informazioni dell'utente necessarie per la dashboard
+        viewModel.addAttribute("user", userService.dashboard());
+
+        // Dopo l'esecuzione, redireziona alla dashboard
+        return "redirect:/user/dashboard";
+    }
+
+
 
     @GetMapping("/register")
     public String register(Model model) {

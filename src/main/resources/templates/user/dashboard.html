@@ -11,36 +11,53 @@
     <header th:insert="~{index :: navbar}"></header>
 
     <!-- DASHBOARD -->
-    <div class="container py-5">
-        <div class="card shadow-lg p-4">
-            <div class="text-center mb-4">
-                <h2 class="smartbay-header">Welcome to your Dashboard</h2>
+    <div class="container-fluis min-vh-100">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 text-center my-5">
+                <h2 class="smartbay-header">Welcome <span th:text="${user.username}">Utente</span> to your Dashboard
+                </h2>
                 <p class="smartbay-subtext">Manage your account and view your details</p>
             </div>
+            <div class="col-12 form-container3">
+                <p class="title1">Personal Information</p>
 
-            <div class="mb-4">
-                <h4 class="mb-3">Personal Information</h4>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <strong>Username:</strong> <span th:text="${user.username}">Utente</span>
-                    </li>
-                    <li class="list-group-item">
-                        <strong>Email:</strong> <span th:text="${user.email}">email@example.com</span>
-                    </li>
-                    <li class="list-group-item">
+                <div>
+                    <div class="mb-4 text-center text-white dim">
+                        <i class="fa-solid fa-circle-user fa-5x"></i>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control input1" id="firstName" name="firstName"
+                            placeholder="First Name" th:value="${user.username}" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control input1" id="email" name="email"
+                            placeholder="Enter Email Address" th:value="${user.email}" disabled />
+                    </div>
+                    <div class="mb-3 text-white">
                         <strong>Roles:</strong>
                         <ul class="mb-0">
                             <li th:each="role : ${user.roles}" th:text="${role.name}">ROLE_USER</li>
                         </ul>
-                    </li>
-                    <li class="list-group-item">
-                        <strong>Balance:</strong> <span th:text="${#numbers.formatDecimal(user.balance, 1, 2)}">0.00</span> €
-                    </li>
-                </ul>
-            </div>
+                    </div>
+                    <div class="mb-3 text-white">
+                        <strong>Balance:</strong>
+                        <span th:text="${#numbers.formatDecimal(user.balance, 1, 2)}">0.00</span> €
+                    </div>
+                </div>
 
-            <div class="d-grid">
-                <a th:href="@{/shop}" class="btn btn-smartbay btn-lg">Go to Shop</a>
+                <!-- Form for adding balance -->
+                <form th:action="@{/addbalance}" th:method="post"
+                    class="mb-3 d-flex justify-content-between align-items-center">
+                    <div class="flex-grow-1 me-2">
+                        <input type="number" step="0.01" class="form-control input1" id="amount" name="amount"
+                            placeholder="Enter amount to add" required />
+                    </div>
+                    <button type="submit" class="btn btn-smartbay btn-lg">Add Balance</button>
+                </form>
+
+                <div class="mb-3 d-flex justify-content-between">
+                    <a th:href="@{/articles}" class="btn btn-success btn-lg mx-1">Go to Shop</a>
+                </div>
             </div>
         </div>
     </div>

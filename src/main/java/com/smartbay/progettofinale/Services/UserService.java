@@ -1,5 +1,6 @@
 package com.smartbay.progettofinale.Services;
 
+import java.math.BigDecimal;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.smartbay.progettofinale.DTO.PersonalInfoDTO;
 import com.smartbay.progettofinale.DTO.UserDTO;
@@ -15,4 +16,5 @@ public interface UserService {
     User find(Long id);
     PersonalInfoDTO dashboard();
     UserInfoDTO getUserInfo(Long id);
+    void addBalance(BigDecimal amount);
 }

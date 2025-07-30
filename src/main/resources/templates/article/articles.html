@@ -1,19 +1,13 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"
-        integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm"
-        crossorigin="anonymous"></script>
-<head th:insert="~{index :: head}">
 
-    
-
-</head>
+<head th:insert="~{index :: head}"></head>
 
 <body>
 
     <head th:insert="~{index :: navbar}"></head>
 
-    <div class="min-vh-100">
+    <div class="headerSmartBayArticle">
         <div th:if="${successMessage}">
             <div class="alert alert-success errorMessage">
                 <p th:text="${successMessage}"></p>
@@ -40,15 +34,9 @@
                             <p class="card-text" th:text="${article.user.username}"></p>
                             <div class="d-flex justify-content-end align-items-center">
                                 <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="btn btn-secondary mx-1">Show</a>
-                                
-                                <!-- Bottone HTMX -->
-                                <button th:hx-post="@{/carrello/add/{id}(id=${article.id})}" hx-trigger="click" hx-target="#message-container"
-                                    hx-swap="innerHTML">
-                                    Add
-                                </button>
-                                
-                                <div id="message-container"></div>
-
+                                <form th:action="@{/carrello/add/{id}(id=${article.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-success mx-1"><i class="fa-solid fa-cart-plus"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -65,8 +53,9 @@
         </div>
     </div>
 
+
     <head th:insert="~{index :: footer}"></head>
-    <div th:insert="~{index :: bootstrapScript}"></div>
+    <script th:insert="~{index :: bootstrapScript}"></script>
 </body>
 
 </html>
