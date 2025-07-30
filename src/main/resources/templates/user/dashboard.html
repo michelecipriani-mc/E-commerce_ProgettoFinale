@@ -11,10 +11,10 @@
     <header th:insert="~{index :: navbar}"></header>
 
     <!-- DASHBOARD -->
-    <div class="container py-5">
+    <div class="container-fluis py-5">
         <div class="card shadow-lg p-4">
             <div class="text-center mb-4">
-                <h2 class="smartbay-header">Welcome to your Dashboard</h2>
+                <h2 class="smartbay-header">Welcome<span th:text="${user.username}">Utente</span> to your Dashboard</h2>
                 <p class="smartbay-subtext">Manage your account and view your details</p>
             </div>
 
