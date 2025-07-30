@@ -47,7 +47,7 @@ public class CareerRequestServiceImpl implements CareerRequestService{
         careerRequest.setIsChecked(false);
         careerRequestRepository.save(careerRequest);
 
-        emailService.sendSimpleEmail("admin@miketimes.com", "Request for the role: " + careerRequest.getRole().getName(), "new request for collaboration from" + user.getUsername());
+        emailService.sendSimpleEmail("admin@smartbay.com", "Request for the role: " + careerRequest.getRole().getName(), "new request for collaboration from" + user.getUsername());
     }
 
     @Override

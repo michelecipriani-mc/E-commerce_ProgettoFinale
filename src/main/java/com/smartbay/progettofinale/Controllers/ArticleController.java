@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import com.smartbay.progettofinale.DTO.AggiornaArticoloCarrelloRequest;
 import com.smartbay.progettofinale.DTO.ArticleDTO;
 import com.smartbay.progettofinale.DTO.CategoryDTO;
 import com.smartbay.progettofinale.Models.Article;
@@ -25,6 +25,7 @@ import com.smartbay.progettofinale.Models.Category;
 import com.smartbay.progettofinale.Repositories.ArticleRepository;
 import com.smartbay.progettofinale.Services.ArticleService;
 import com.smartbay.progettofinale.Services.CrudService;
+import com.smartbay.progettofinale.Services.ImageService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,6 +50,9 @@ public class ArticleController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private ImageService imageService;
+
     @GetMapping
     public String articlesIndex(Model viewModel) {
         viewModel.addAttribute("title", "All Article");
@@ -72,21 +76,25 @@ public class ArticleController {
     
     @PostMapping
     public String articlesStore(@Valid @ModelAttribute("article") Article article,
-                                BindingResult result,
-                                RedirectAttributes redirectAttributes,
-                                Principal principal, MultipartFile file, Model viewModel) {
+                            BindingResult result,
+                            RedirectAttributes redirectAttributes,
+                            Principal principal,
+                            @RequestParam("file") MultipartFile file,
+                            Model viewModel) {
         if (result.hasErrors()) {
             viewModel.addAttribute("title", "Create an Article");
             viewModel.addAttribute("article", article);
             viewModel.addAttribute("categories", categoryService.readAll()); 
             return "article/create";          
         }
+
         article.setIsAccepted(null);
-        articleService.create(article, principal, file);
+        articleService.create(article, principal, file); // logica immagine gestita nel service
         redirectAttributes.addFlashAttribute("successMessage", "Article added and awaiting review");
-        
+
         return "redirect:/";
     }
+
 
     @GetMapping("detail/{id}")
     public String detailArticle(@PathVariable("id") Long id, Model viewModel) {
@@ -104,15 +112,18 @@ public class ArticleController {
             viewModel.addAttribute("categories", categoryService.readAll());
             return "article/edit";  
         } else {
-            return "redirect:/writer/dashboard";
+            return "redirect:/seller/dashboard";
         }
     }
 
     @PostMapping("/update/{id}")
     public String articleUpdate(@PathVariable("id") Long id,
                                 @Valid @ModelAttribute("article") Article article,
-                                BindingResult result, RedirectAttributes redirectAttributes,
-                                Principal principal, MultipartFile file, Model viewModel) {
+                                BindingResult result,
+                                RedirectAttributes redirectAttributes,
+                                Principal principal,
+                                @RequestParam("file") MultipartFile file,
+                                Model viewModel) {
         if (result.hasErrors()) {
             viewModel.addAttribute("title", "Article update");
             article.setImage(articleService.read(id).getImage());
@@ -132,15 +143,16 @@ public class ArticleController {
             redirectAttributes.addFlashAttribute("successMessage", "Article successfully edited!");
         }
 
-        articleService.update(id, article, file);
-        return "redirect:/writer/dashboard";
+        articleService.update(id, article, file); // file gestito nel service
+        return "redirect:/seller/dashboard";
     }
+
 
     @GetMapping("/delete/{id}")
     public String articleDelete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         articleService.delete(id);
         redirectAttributes.addFlashAttribute("successMessage", "Article successfully deleted!");
-        return "redirect:/writer/dashboard";
+        return "redirect:/seller/dashboard";
     }
 
     @GetMapping("/revisor/dashboard")

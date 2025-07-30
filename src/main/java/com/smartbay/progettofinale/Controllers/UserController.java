@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.smartbay.progettofinale.DTO.ArticleDTO;
-import com.smartbay.progettofinale.DTO.PersonalInfoDTO;
 import com.smartbay.progettofinale.DTO.UserDTO;
 import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.User;
@@ -149,12 +148,13 @@ public class UserController {
         return "revisor/dashboard";
     }
 
-    @GetMapping("/writer/dashboard")
+    @GetMapping("/seller/dashboard")
     public String writerDashboard(Model viewModel, Principal principal) {
         viewModel.addAttribute("title", "Your articles");
         List<ArticleDTO> userArticles =articleService.readAll().stream().filter(article -> article.getUser().getEmail().equals(principal.getName())).toList();
         viewModel.addAttribute("articles", userArticles);  
-        return "writer/dashboard";
+        return "seller/dashboard";
     }
     
 }
+

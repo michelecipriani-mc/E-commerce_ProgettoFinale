@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{index :: head}">
+    <title>Carrello - SmartBay</title>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header th:insert="~{index :: navbar}"></header>
+
+    <div class="min-vh-100">
+        <div th:if="${cartSuccess != null and cartWarning == null}">
+            <div class="alert alert-success errorMessage mt-3">
+                <p th:text="${cartSuccess}"></p>
+            </div>
+        </div>
+    
+        <div th:if="${cartWarning != null}">
+            <div class="alert alert-warning errorMessage mt-3">
+                <p th:text="${cartWarning}"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARRELLO -->
+    <div class="container py-5">
+        <div class="card shadow-lg p-4">
+            <h2 class="smartbay-header mb-4">Il tuo carrello</h2>
+
+            <!-- Cart empty check -->
+
+            <div th:if="${carrello.articoli == null or carrello.articoli.isEmpty()}">
+                <p>Il tuo carrello è vuoto.</p>
+            </div>
+
+            <!-- Cart with items -->
+            <div th:unless="${carrello.articoli == null or carrello.articoli.isEmpty()}">
+                <!-- Iterate over CarrelloDTO entries -->
+                <div th:each="item : ${carrello.articoli}" class="...">
+                    <div>
+                        <strong th:text="${item.articolo.title}">Nome Articolo</strong><br>
+                        <small>Prezzo: €<span th:text="${item.articolo.price}">0.00</span></small><br>
+                
+                        <!-- Quantity Control -->
+                        <!-- Remove all copies of an article -->
+                        <form th:action="@{/carrello/removeall/{id}(id=${item.articolo.id})}" method="post">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">🗑</button>
+                        </form>
+                
+                        <!-- Remove one -->
+                        <form th:action="@{/carrello/removeone/{id}(id=${item.articolo.id})}" method="post">
+                            <button type="submit" class="btn btn-secondary mx-1">-</button>
+                        </form>
+                
+                        <!-- Display quantity -->
+                        <span class="mx-2" th:text="${item.quantita}">1</span>
+                
+                        <!-- Add one -->
+                        <form th:action="@{/carrello/addone/{id}(id=${item.articolo.id})}" method="post">
+                            <button type="submit" class="btn btn-secondary mx-1">+</button>
+                        </form>
+                
+                    </div>
+                </div>
+                
+                <!-- Clear all articles -->
+                <form th:action="@{/carrello/clear}" method="post">
+                    <button type="submit" class="btn btn-danger">Clear Cart</button>         </form>
+
+                <!-- Totale -->
+                <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                    <strong>Totale:</strong>
+                    <strong th:text="'€ ' + ${#numbers.formatDecimal(totale, 1, 2)}">€ 0.00</strong>
+                </div>
+
+                <!-- Azioni -->
+                <div class="mt-4 d-flex justify-content-between">
+                    <form th:action="@{/carrello/clear}" method="post">
+                        <button type="submit" class="btn btn-outline-danger">Svuota carrello</button>
+                    </form>
+                    <button class="btn btn-smartbay">Procedi al checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer th:insert="~{index :: footer}" class="smartbay-footer mt-5"></footer>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+
+</body>
+</html>

@@ -88,6 +88,8 @@ public class Carrello {
 
         // Reimpostare il numero di prodotti al valore massimo consentito
         articles.put(idArticolo, maxArticle);
+
+        throw new RuntimeException("Limite di " + maxArticle);
       }
     }
   }

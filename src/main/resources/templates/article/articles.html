@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="~{index :: head}"></head>
+
+<body>
+
+    <head th:insert="~{index :: navbar}"></head>
+
+    <div class="headerSmartBayArticle">
+        <div th:if="${successMessage}">
+            <div class="alert alert-success errorMessage">
+                <p th:text="${successMessage}"></p>
+            </div>
+        </div>
+
+        <div class="container-fluid intest">
+            <div class="row ms-5 align-items-center">
+                <div class="col-12 d-flex justify-content-center align-items-center my-3">
+                    <h1 th:text="${title}">Articles Index</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" th:if="${articles.size() > 0}">
+            <div class="row my-2 justify-content-center">
+                <div th:each="article:${articles}" class="col-12 col-md-4 d-flex justify-content-center my-5">
+                    <div class="card" style="width: 18rem;">
+                        <img th:if="${article.image != null}" th:src="${article.image.path}"
+                            class="card-img-top imgCard" alt="article image">
+                        <div class="card-body bg-body-secondary d-flex flex-column">
+                            <h5 class="card-title" th:text="${article.title}"></h5>
+                            <p class="card-text" th:text="${article.subtitle}"></p>
+                            <p class="card-text" th:text="${article.user.username}"></p>
+                            <div class="d-flex justify-content-end align-items-center">
+                                <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="btn btn-secondary mx-1">Show</a>
+                                <form th:action="@{/carrello/add/{id}(id=${article.id})}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-success mx-1"><i class="fa-solid fa-cart-plus"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid" th:unless="${articles.size() > 0}">
+            <div class="row justify-content-center align-items-center min-vh-100">
+                <div class="col-12 mb-5">
+                    <h1 class="text-center">THERE ARE NO ARTICLES...</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <head th:insert="~{index :: footer}"></head>
+    <script th:insert="~{index :: bootstrapScript}"></script>
+</body>
+
+</html>

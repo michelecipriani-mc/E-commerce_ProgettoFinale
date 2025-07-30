@@ -1,12 +1,17 @@
 package com.smartbay.progettofinale.Services;
-import org.springframework.stereotype.Service;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import com.smartbay.progettofinale.DTO.ArticleDTO;
+import com.smartbay.progettofinale.DTO.ArticoloQuantitaDTO;
 import com.smartbay.progettofinale.DTO.CarrelloDTO;
 import com.smartbay.progettofinale.Models.Carrello;
 import com.smartbay.progettofinale.Repositories.ArticleRepository;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -15,10 +20,13 @@ public class CarrelloService {
 
   private final ArticleRepository articoloRepository;
 
+  private final ModelMapper modelMapper;
+
   private final Map<Long, Carrello> carrelli = new HashMap<>();
 
-  public CarrelloService(ArticleRepository  articoloRepository) {
+  public CarrelloService(ArticleRepository articoloRepository, ModelMapper modelMapper) {
     this.articoloRepository = articoloRepository;
+    this.modelMapper = modelMapper;
   }
 
   // Ottieni carrello dell'Utente, o creane uno se non esiste
@@ -39,7 +47,8 @@ public class CarrelloService {
     return this.carrelloToDTO(getCarrelloFromUtente(idUtente));
   }
 
-  public CarrelloDTO aggiornaQuantitaArticolo(Long idUtente, Long idArticolo, int cambiamentoQuantita) {
+  public CarrelloDTO aggiornaQuantitaArticolo(Long idUtente, Long idArticolo,
+      int cambiamentoQuantita) {
     Carrello carrello = getCarrelloFromUtente(idUtente);
     articoloRepository.findById(idArticolo)
         .orElseThrow(() -> new RuntimeException("Nessun articolo trovato con id: " + idArticolo));
@@ -65,22 +74,21 @@ public class CarrelloService {
   }
 
   public CarrelloDTO carrelloToDTO(Carrello carrello) {
-
     CarrelloDTO dto = new CarrelloDTO();
-
     if (carrello.getArticles() == null || carrello.getArticles().isEmpty()) {
       return dto;
     }
 
-    // for (Map.Entry<Long, Integer> entry : carrello.getArticles().entrySet()) {
+    List<ArticoloQuantitaDTO> lista = carrello.getArticles().entrySet().stream()
+        .map(entry -> new ArticoloQuantitaDTO(
+            modelMapper
+                .map(articoloRepository.findById(entry.getKey()).orElseThrow(), ArticleDTO.class),
+                    entry.getValue()))
+        .sorted(
+            Comparator.comparing(a -> a.getArticolo().getTitle(), String.CASE_INSENSITIVE_ORDER))
+        .toList();
 
-    //   dto.getArticoli().put(
-    //       // Key (Stringa nome)
-    //       this.articoloRepository.findById(entry.getKey()).orElseThrow().get, 
-    //       // Value (int quantità)
-    //       entry.getValue());
-    // }
-
+    dto.setArticoli(lista);
     return dto;
   }
 }
