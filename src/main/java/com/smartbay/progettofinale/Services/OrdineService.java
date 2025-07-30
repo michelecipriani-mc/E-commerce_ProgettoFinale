@@ -8,7 +8,8 @@ import com.smartbay.progettofinale.Models.User;
 import com.smartbay.progettofinale.Repositories.ArticleRepository;
 import com.smartbay.progettofinale.Repositories.OrdineRepository;
 import com.smartbay.progettofinale.Repositories.UserRepository;
-
+import com.smartbay.progettofinale.Security.SecurityService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,17 +24,32 @@ public class OrdineService {
     private final ArticleRepository articleRepository;
     private final OrdineRepository ordineRepository;
     private final UserRepository userRepository;
+    private final SecurityService securityService;
 
     public OrdineService(CarrelloService carrelloService, ArticleRepository articleRepository,
-                         OrdineRepository ordineRepository, UserRepository userRepository) {
+                         OrdineRepository ordineRepository, UserRepository userRepository, SecurityService securityService) {
         this.carrelloService = carrelloService;
         this.articleRepository = articleRepository;
         this.ordineRepository = ordineRepository;
         this.userRepository = userRepository;
+        this.securityService = securityService;
     }
 
     //METODO CREA ORDINE AGGIORNATO CON SCALO DALLA BALANCE
-    public Ordine creaOrdine(User user) {
+    @Transactional
+    public Ordine creaOrdine() {
+
+    // Obtain instance of active user
+    User userInstance = securityService.getActiveUser();
+
+    if (userInstance == null) {
+        throw new IllegalStateException("Unauthenticated users cannot place orders.");
+    }
+
+    // Obtain a user object manged by JPA for persistence
+    User user = userRepository.findById(userInstance.getId())
+            .orElseThrow(() -> new IllegalArgumentException("No user by this id."));
+    
     Carrello carrello = carrelloService.getCarrelloFromUtente(user.getId());
 
     if (carrello.getArticles().isEmpty()) {
@@ -84,7 +100,8 @@ public class OrdineService {
     return ordine;
 }
 
-    public List<Ordine> getOrdiniUtente(User user) {
+    public List<Ordine> getOrdiniUtente() {
+        User user = securityService.getActiveUser();
         return ordineRepository.findByUser(user);
     }
 }

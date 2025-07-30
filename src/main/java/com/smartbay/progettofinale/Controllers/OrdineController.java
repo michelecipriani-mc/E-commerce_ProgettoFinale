@@ -19,23 +19,19 @@ import com.smartbay.progettofinale.Services.OrdineService;
 public class OrdineController {
 
     private final OrdineService ordineService;
-    private final SecurityService securityService;
 
     public OrdineController(OrdineService ordineService, SecurityService securityService) {
         this.ordineService = ordineService;
-        this.securityService = securityService;
     }
 
     @PostMapping("/conferma")
     public ResponseEntity<Ordine> confermaOrdine() {
-        User utente = securityService.getActiveUser(); // deve restituire User
-        Ordine ordine = ordineService.creaOrdine(utente);
+        Ordine ordine = ordineService.creaOrdine();
         return ResponseEntity.ok(ordine);
     }
 
     @GetMapping("")
     public ResponseEntity<List<Ordine>> getOrdiniUtente() {
-        User utente = securityService.getActiveUser();
-        return ResponseEntity.ok(ordineService.getOrdiniUtente(utente));
+        return ResponseEntity.ok(ordineService.getOrdiniUtente());
     }
 }
