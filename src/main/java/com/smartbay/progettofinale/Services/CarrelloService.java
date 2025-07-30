@@ -92,4 +92,8 @@ public class CarrelloService {
     dto.setArticoli(lista);
     return dto;
   }
+
+  public int getNumeroArticoliNelCarrello(Long idUtente) {
+    return this.carrelli.get(idUtente).getArticles().size();
+  }
 }
