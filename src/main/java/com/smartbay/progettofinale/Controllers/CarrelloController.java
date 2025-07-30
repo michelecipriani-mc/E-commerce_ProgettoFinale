@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.smartbay.progettofinale.DTO.AggiornaArticoloCarrelloRequest;
 import com.smartbay.progettofinale.DTO.CarrelloDTO;
+import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.DTO.AggiornaArticoloCarrelloRequest;
 import com.smartbay.progettofinale.Security.SecurityService;
 import com.smartbay.progettofinale.Services.CarrelloService;
@@ -56,22 +57,38 @@ public class CarrelloController {
   }
 
   @PostMapping("/update")
-  public ResponseEntity<String> aggiornaQuantitaCarrello(
-      @RequestParam("id") Long idArticolo,
-      @RequestParam("changeInQuantity") int changeInQuantity
-    ) {
+  public ResponseEntity<String> aggiornaQuantitaCarrello(@RequestParam("id") Long idArticolo,
+      @RequestParam("changeInQuantity") int changeInQuantity) {
 
     Long idUtente = securityService.getActiveUserId();
 
-    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo,
-        changeInQuantity);
+    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, changeInQuantity);
 
     return ResponseEntity.ok("Carrello Aggiornato");
   }
 
+  @PostMapping("/dropdownadd/{id}")
+  public String addArticleFromDropdown(@PathVariable("id") Long idArticolo,
+      @RequestParam("quantity") int quantity, RedirectAttributes redirectAttributes) {
+
+    Long idUtente = securityService.getActiveUserId();
+
+    try {
+      carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, quantity);
+      redirectAttributes.addFlashAttribute("cartSuccess", "Cart updated");
+
+    } catch (RuntimeException ex) {
+      redirectAttributes.addFlashAttribute("cartWarning", ex.getMessage());
+    }
+
+    // Redirect back to the article detail page using its ID
+    // The flash attributes will be available on the redirected request.
+    return "redirect:/articles/detail/" + idArticolo;
+  }
+
   /**
-   * Rimuove un articolo dal carrello dell'utente corrente. Questo endpoint è usato dal pulsante del
-   * cestino in Thymeleaf.
+   * Rimuove tutte le copie di un articolo dal carrello dell'utente corrente. Questo endpoint è
+   * usato dal pulsante del cestino in Thymeleaf.
    *
    * @param idArticolo l'ID dell'articolo da rimuovere
    * @return una redirezione alla pagina del carrello aggiornata
@@ -80,6 +97,38 @@ public class CarrelloController {
   public String rimuoviArticoloDaCarrello(@RequestParam("id") Long idArticolo) {
     Long idUtente = securityService.getActiveUserId();
     carrelloService.rimuoviArticolo(idUtente, idArticolo);
+
+    // Dopo la rimozione, redireziona alla pagina del carrello
+    return "redirect:/carrello";
+  }
+
+  /**
+   * Rimuove un singolo articolo dal carrello dell'utente corrente. Questo endpoint è usato dal
+   * pulsante del cestino in Thymeleaf.
+   *
+   * @param idArticolo l'ID dell'articolo da rimuovere
+   * @return una redirezione alla pagina del carrello aggiornata
+   */
+  @PostMapping("/removeone")
+  public String rimuoviUnoDaCarrello(@RequestParam("id") Long idArticolo) {
+    Long idUtente = securityService.getActiveUserId();
+    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, -1);
+
+    // Dopo la rimozione, redireziona alla pagina del carrello
+    return "redirect:/carrello";
+  }
+
+  /**
+   * Aggiunge un singolo articolo dal carrello dell'utente corrente. Questo endpoint è usato dal
+   * pulsante del cestino in Thymeleaf.
+   *
+   * @param idArticolo l'ID dell'articolo da rimuovere
+   * @return una redirezione alla pagina del carrello aggiornata
+   */
+  @PostMapping("/addone")
+  public String aggiungiUnoDaCarrello(@RequestParam("id") Long idArticolo) {
+    Long idUtente = securityService.getActiveUserId();
+    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, -1);
 
     // Dopo la rimozione, redireziona alla pagina del carrello
     return "redirect:/carrello";
