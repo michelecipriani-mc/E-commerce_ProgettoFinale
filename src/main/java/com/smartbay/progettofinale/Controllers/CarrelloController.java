@@ -82,17 +82,14 @@ public class CarrelloController {
       carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, +1);
 
       // Success HTML for HTMX
-      notificationHtml = "<div class=\"alert alert-success\" "
-          + "style=\"opacity: 1; transition: opacity 1s ease-out; margin-top: 15px; text-align: center;\" "
-          + "hx-delete=\"true\" hx-trigger=\"load delay:3s\">"
-          + "<p>Item added to cart successfully!</p>" + "</div>";
+      notificationHtml = "<div class=\"htmx-notification\" "
+          + "hx-delete=\"true\" hx-trigger=\"load delay:2.5s\">" + 
+          "<p>Item added to cart successfully!</p>" + "</div>";
 
     } catch (Exception ex) {
       // Error HTML for HTMX with the exception message
-      notificationHtml = "<div class=\"alert alert-warning\" " + // Changed to alert-warning for
-                                                                 // warning
-          "style=\"opacity: 1; transition: opacity 1s ease-out; margin-top: 15px; text-align: center;\" "
-          + "hx-delete=\"true\" hx-trigger=\"load delay:5s\">" + // Slightly longer delay for errors
+      notificationHtml = "<div class=\"htmx-notification error\" " + // Added 'error' class
+          "hx-delete=\"true\" hx-trigger=\"load delay:4s\">" + // Longer delay for errors
           "<p>Error: " + ex.getMessage() + "</p>" + "</div>";
     }
 

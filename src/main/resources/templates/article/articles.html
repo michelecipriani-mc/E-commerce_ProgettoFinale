@@ -8,9 +8,6 @@
     <head th:insert="~{index :: navbar}"></head>
 
     <div class="headerSmartBayArticle">
-        <div id="cart-notification-container">
-        </div>
-
         <div class="container-fluid intest">
             <div class="row ms-5 align-items-center">
                 <div class="col-12 d-flex justify-content-center align-items-center my-3">
@@ -32,10 +29,12 @@
                             <div class="d-flex justify-content-end align-items-center">
                                 <a th:href="@{/articles/detail/{id}(id=${article.id})}"
                                     class="btn btn-secondary mx-1">Show</a>
-                                    <form th:attr="hx-post=@{/carrello/htmx-add/{id}(id=${article.id})}" hx-target="#cart-notification-container"
-                                        hx-swap="innerHTML" hx-trigger="submit" style="display:inline;">
-                                        <button type="submit" class="btn btn-success mx-1"><i class="fa-solid fa-cart-plus"></i></button>
-                                    </form>
+                                <form th:attr="hx-post=@{/carrello/htmx-add/{id}(id=${article.id})}"
+                                    hx-target="#cart-notification-container" hx-swap="innerHTML" hx-trigger="submit"
+                                    style="display:inline;">
+                                    <button type="submit" class="btn btn-success mx-1"><i
+                                            class="fa-solid fa-cart-plus"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -52,9 +51,76 @@
         </div>
     </div>
 
+    <div id="cart-notification-container" class="notification-container">
+    </div>
+
     <head th:insert="~{index :: footer}"></head>
     <script th:insert="~{index :: bootstrapScript}"></script>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+    <style>
+        /* Styles for the notification container */
+        .notification-container {
+            position: fixed;
+            /* Fixed position relative to the viewport */
+            bottom: 20px;
+            /* 20px from the bottom */
+            right: 20px;
+            /* 20px from the right */
+            z-index: 1050;
+            /* High z-index to sit on top of other elements (like Bootstrap modals, etc.) */
+            display: flex;
+            /* Use flexbox to align future notifications if multiple */
+            flex-direction: column;
+            /* Stack notifications vertically */
+            gap: 10px;
+            /* Space between multiple notifications */
+            pointer-events: none;
+            /* Allows clicks to pass through the container to elements beneath */
+        }
+
+        /* Styles for individual notification messages */
+        .htmx-notification {
+            background-color: rgba(60, 179, 113, 0.9);
+            /* Success green with transparency */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            min-width: 200px;
+            max-width: 300px;
+            opacity: 1;
+            /* Start fully visible */
+            transform: translateY(0);
+            /* Start at original position */
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            /* Smooth transitions for fade and slide */
+            pointer-events: auto;
+            /* Re-enable pointer events for the notification itself */
+            position: relative;
+            /* Needed for z-index and transformations to work correctly */
+        }
+
+        .htmx-notification.error {
+            background-color: rgba(220, 53, 69, 0.9);
+            /* Error red with transparency */
+        }
+
+        /* HTMX Fade-out class (automatically added by hx-delete for opacity transition) */
+        .htmx-notification.htmx-removing {
+            opacity: 0;
+            /* Fade out */
+            transform: translateY(-20px);
+            /* Move upwards slightly as it fades */
+        }
+
+        /* Optional: for the text inside the notification */
+        .htmx-notification p {
+            margin: 0;
+            /* Remove default paragraph margin */
+            font-size: 0.9em;
+        }
+    </style>
 </body>
 
 </html>
