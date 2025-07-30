@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.smartbay.progettofinale.DTO.ArticleDTO;
@@ -91,8 +92,8 @@ public class UserController {
         return "user/dashboard"; // Corrisponde al file templates/user/dashboard.html
     }
 
-    @GetMapping("/addbalance/{amount}")
-    public String addBalance(@PathVariable("amount") BigDecimal amount, Model viewModel, 
+    @PostMapping("/addbalance")
+    public String addBalance(@RequestParam("amount") BigDecimal amount, Model viewModel, 
             RedirectAttributes redirectAttributes) {
 
         try {
