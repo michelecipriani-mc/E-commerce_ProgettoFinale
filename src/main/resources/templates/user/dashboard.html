@@ -11,10 +11,11 @@
     <header th:insert="~{index :: navbar}"></header>
 
     <!-- DASHBOARD -->
-    <div class="container-fluis min-vh-100">
+    <div class="container-fluid min-vh-100">
         <div class="row justify-content-center align-items-center">
             <div class="col-12 text-center my-5">
-                <h2 class="smartbay-header">Welcome <span th:text="${user.username}">Utente</span> to your Dashboard</h2>
+                <h2 class="smartbay-header">Welcome <span th:text="${user.username}">Utente</span> to your Dashboard
+                </h2>
                 <p class="smartbay-subtext">Manage your account and view your details</p>
             </div>
             <div class="col-12 form-container3">
@@ -26,7 +27,6 @@
                     <div class="mb-3">
                         <input type="text" class="form-control input1" id="firstName" name="firstName"
                             placeholder="First Name" th:field="${user.username}" th:attr="disabled=${true}" />
-                        </p>
                     </div>
                     <div class="mb-3">
                         <input type="email" class="form-control input1" id="email" name="email"
@@ -42,14 +42,15 @@
                         <strong>Balance:</strong>
                         <span th:text="${#numbers.formatDecimal(user.balance, 1, 2)}">0.00</span> €
                     </div>
-                    <div class="mb-3 d-flex justify-content-between">
-                        <a th:href="@{/addbalance/{amount}}" class="btn btn-smartbay btn-lg mx-1">Set Balance</a>
+                    <div>
                         <a th:href="@{/articles}" class="btn btn-success btn-lg mx-1">Go to Shop</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+
 
 
 
