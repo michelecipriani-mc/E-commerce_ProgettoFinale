@@ -43,7 +43,7 @@
                         <span th:text="${#numbers.formatDecimal(user.balance, 1, 2)}">0.00</span> €
                     </div>
                     <div class="mb-3 d-flex justify-content-between">
-                        <a th:href="@{#}" class="btn btn-smartbay btn-lg mx-1">Set Balance</a>
+                        <a th:href="@{/addbalance/{amount}}" class="btn btn-smartbay btn-lg mx-1">Set Balance</a>
                         <a th:href="@{/articles}" class="btn btn-success btn-lg mx-1">Go to Shop</a>
                     </div>
                 </form>

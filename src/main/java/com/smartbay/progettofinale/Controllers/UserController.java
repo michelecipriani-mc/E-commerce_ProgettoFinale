@@ -22,7 +22,7 @@ import com.smartbay.progettofinale.Repositories.CareerRequestRepository;
 import com.smartbay.progettofinale.Services.ArticleService;
 import com.smartbay.progettofinale.Services.CategoryService;
 import com.smartbay.progettofinale.Services.UserService;
-
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,6 +90,26 @@ public class UserController {
 
         return "user/dashboard"; // Corrisponde al file templates/user/dashboard.html
     }
+
+    @GetMapping("/addbalance/{amount}")
+    public String addBalance(@PathVariable("amount") BigDecimal amount, Model viewModel, 
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            userService.addBalance(amount);
+            redirectAttributes.addFlashAttribute("paymentSuccess", "Balance Updated");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("paymentWarning", ex.getMessage());
+        }
+
+        // Aggiunge al modello le informazioni dell'utente necessarie per la dashboard
+        viewModel.addAttribute("user", userService.dashboard());
+
+        // Dopo l'esecuzione, redireziona alla dashboard
+        return "redirect:/user/dashboard";
+    }
+
+
 
     @GetMapping("/register")
     public String register(Model model) {

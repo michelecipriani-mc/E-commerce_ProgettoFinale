@@ -1,5 +1,6 @@
 package com.smartbay.progettofinale.Services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.smartbay.progettofinale.Security.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -102,6 +104,34 @@ public class UserServiceImpl implements UserService{
 
         // Converte l'entità User in PersonalInfoDTO (include saldo e altri dati sensibili)
         return modelMapper.map(user, PersonalInfoDTO.class);
+    }
+
+    @Transactional
+    public void addBalance(BigDecimal amount) {
+
+        if (amount.compareTo(BigDecimal.valueOf(0)) <= 0) {
+            throw new IllegalArgumentException("Cannot add negative balance.");
+        }
+
+        // Obtain active user from SecurityContext
+        User user = securityService.getActiveUser();
+
+        if (user == null) {
+            throw new IllegalStateException("Cannot add balance as anonymous user.");
+        }
+
+        // Obtain JPA-managed user instance for persistence (automatic with @Transactional)
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found."));
+
+        // Avoid null values
+        BigDecimal balance = managedUser.getBalance();
+        if (balance == null) {
+            balance = BigDecimal.valueOf(0);
+        }
+
+        // Add balance for customer
+        managedUser.setBalance(managedUser.getBalance().add(amount));
     }
 
     /**
