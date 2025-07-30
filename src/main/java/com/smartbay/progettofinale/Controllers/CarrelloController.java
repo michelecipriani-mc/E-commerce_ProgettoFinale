@@ -83,13 +83,13 @@ public class CarrelloController {
 
       // Success HTML for HTMX
       notificationHtml = "<div class=\"htmx-notification\" "
-          + "hx-delete=\"true\" hx-trigger=\"load delay:2.5s\">" + 
+          + "hx-ext=\"remove-me\" _=\"on load delay 2.5s then remove me\">" + 
           "<p>Item added to cart successfully!</p>" + "</div>";
 
     } catch (Exception ex) {
       // Error HTML for HTMX with the exception message
-      notificationHtml = "<div class=\"htmx-notification error\" " + // Added 'error' class
-          "hx-delete=\"true\" hx-trigger=\"load delay:4s\">" + // Longer delay for errors
+      notificationHtml = "<div class=\"htmx-notification error\" "
+          + "hx-ext=\"remove-me\" _=\"on load delay 4s then remove me\">" +
           "<p>Error: " + ex.getMessage() + "</p>" + "</div>";
     }
 
