@@ -67,7 +67,7 @@
 .headerSmartBayArticle {
   margin-top: -30px;
   width: 100%;
-  height: 100vh;
+  padding: 20px;
   background: linear-gradient(rgba(255, 255, 255, 0.4)), url('/images/header.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -94,8 +94,8 @@
 }
 
 .btn-smartbay:hover {
-    background-color: #003566;
-    color: #000814;
+    background-color: white;
+    color: #FFC300;
 } 
 
 /* Label campi form */
@@ -132,7 +132,7 @@
 /* ARTICLE CARD */
 .card {
  width: 190px;
- height: 300px;
+ min-height: 300px;
  padding: .8em;
  background: #001D3D;
  box-shadow: 0 1px 3px #FFC300, 0 1px 2px #FFD60A;
@@ -500,3 +500,17 @@
   gap: 15px;
 }
 
+/* USER Dashboard */
+.form-container3 {
+  width: 400px;
+  height: 600px;
+  background-color: #001D3D;
+  box-shadow: #FFC300 0px 5px 15px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding: 20px 30px;
+}
+
+.dim {
+  margin-top: -15px;
+}
