@@ -129,7 +129,7 @@ public class CarrelloController {
   @PostMapping("/addone")
   public String aggiungiUnoDaCarrello(@RequestParam("id") Long idArticolo) {
     Long idUtente = securityService.getActiveUserId();
-    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, -1);
+    carrelloService.aggiornaQuantitaArticolo(idUtente, idArticolo, +1);
 
     // Dopo la rimozione, redireziona alla pagina del carrello
     return "redirect:/carrello";
