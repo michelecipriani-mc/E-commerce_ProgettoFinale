@@ -70,6 +70,10 @@ public class UserServiceImpl implements UserService{
         Role role = roleRepository.findByName("ROLE_USER");
         user.setRoles(List.of(role));
 
+        if (user.getBalance() == null) {
+            user.setBalance(BigDecimal.valueOf(0L));
+        }
+
         userRepository.save(user);
         authenticateUserAndSetSession(user, userDto, request);       
     }
@@ -127,7 +131,7 @@ public class UserServiceImpl implements UserService{
         // Avoid null values
         BigDecimal balance = managedUser.getBalance();
         if (balance == null) {
-            balance = BigDecimal.valueOf(0);
+            balance = BigDecimal.valueOf(0L);
         }
 
         // Add balance for customer
