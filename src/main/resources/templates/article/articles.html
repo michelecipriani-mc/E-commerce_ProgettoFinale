@@ -1,7 +1,72 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:insert="~{index :: head}"></head>
 
-<head th:insert="~{index :: head}"></head>
+    <style>
+        /* Container for toast notifications */
+        #cart-notification-container {
+            position: fixed;
+            /* Keeps it in the same place on the screen */
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            /* Ensures it's on top of other content */
+            width: 300px;
+            /* A fixed width for the toast */
+            pointer-events: none;
+            /* Allows clicks to go "through" the container */
+        }
+    
+        /* Base styles for any notification */
+        .toast-notification {
+            pointer-events: auto;
+            /* Re-enable clicks on the toast itself */
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* Bind the animation to this class */
+            animation-name: toast-animation;
+            animation-timing-function: ease-in-out;
+            animation-fill-mode: forwards;
+            /* Keeps the final state of the animation */
+        }
+    
+        /* Define animation durations based on success or error */
+        .toast-success {
+            animation-duration: 3s;
+        }
+    
+        .toast-error {
+            animation-duration: 5s;
+        }
+    
+        /* The animation keyframes */
+        @keyframes toast-animation {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+    
+            10% {
+                /* Fade in */
+                opacity: 1;
+                transform: translateY(0);
+            }
+    
+            90% {
+                /* Stay visible */
+                opacity: 1;
+                transform: translateY(0);
+            }
+    
+            100% {
+                /* Fade out and move up */
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
 
 <body>
 
@@ -53,8 +118,9 @@
     </div>
 
     <head th:insert="~{index :: footer}"></head>
-    <script th:insert="~{index :: bootstrapScript}"></script>
+    <div th:insert="~{index :: bootstrapScript}"></div>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/remove-me.js"></script>
 </body>
 
 </html>
