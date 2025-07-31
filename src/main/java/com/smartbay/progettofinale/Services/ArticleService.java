@@ -1,4 +1,5 @@
 package com.smartbay.progettofinale.Services;
+
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,62 @@ import com.smartbay.progettofinale.Models.User;
 import com.smartbay.progettofinale.Repositories.ArticleRepository;
 import com.smartbay.progettofinale.Repositories.UserRepository;
 
+/**
+ * Service che gestisce la logica di business per l'entità Article.
+ * Implementa l'interfaccia CrudService per operazioni CRUD con DTO.
+ * 
+ * --@Service indica che è un componente di servizio gestito da Spring.
+ * 
+ * Dipendenze iniettate tramite @Autowired:
+ * - UserRepository: per recuperare dati utenti.
+ * - ArticleRepository: per persistere e recuperare gli articoli dal DB.
+ * - ModelMapper: per convertire tra entità Article e DTO ArticleDTO.
+ * - ImageService: per gestire il salvataggio e cancellazione di immagini
+ * associate agli articoli.
+ * 
+ * Metodi principali:
+ * 
+ * - create(Article article, Principal principal, MultipartFile file):
+ * Crea un nuovo articolo associandolo all'utente autenticato (se presente).
+ * Salva l'articolo e, se fornita, salva anche l'immagine sul disco e nel DB.
+ * L'articolo creato ha isAccepted settato a null (da approvare).
+ * 
+ * - delete(Long key):
+ * Elimina un articolo dato l'id.
+ * Se presente un'immagine associata, la cancella prima dal file system.
+ * 
+ * - read(Long key):
+ * Recupera un articolo per id e lo mappa in ArticleDTO.
+ * Lancia eccezione 404 se non trovato.
+ * 
+ * - readAll():
+ * Recupera tutti gli articoli dal DB e li mappa in lista di DTO.
+ * 
+ * - update(Long key, Article updatedArticle, MultipartFile file):
+ * Aggiorna un articolo esistente.
+ * Gestisce la sostituzione o mantenimento dell'immagine associata.
+ * Se i dati cambiano, resetta lo stato di approvazione (isAccepted=null).
+ * 
+ * Metodi aggiuntivi specifici:
+ * 
+ * - searchByCategory(Category category):
+ * Cerca articoli per categoria e li converte in DTO.
+ * 
+ * - searchByUser(User user):
+ * Cerca articoli scritti da uno specifico utente.
+ * 
+ * - setIsAccepted(Boolean result, Long id):
+ * Imposta lo stato di approvazione (isAccepted) per un articolo.
+ * 
+ * - updateStatus(Long articleId, boolean isAccepted):
+ * Aggiorna lo stato di accettazione con controllo di esistenza.
+ * 
+ * - search(String keyword):
+ * Esegue una ricerca testuale su titolo, sottotitolo, username e categoria.
+ */
+
 @Service
-public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
+public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,12 +88,13 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
     @Autowired
     private ImageService imageService;
 
-    
     @Override
     public ArticleDTO create(Article article, Principal principal, MultipartFile file) {
         if (principal != null) {
-            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            User user = userRepository.findById(userDetails.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             article.setUser(user);
         }
 
@@ -48,7 +104,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         if (file != null && !file.isEmpty()) {
             try {
                 String imagePath = imageService.saveImageOnDisk(file).get(); // salva su disco
-                imageService.saveImageOnDB(imagePath, savedArticle);         // salva il path nel DB
+                imageService.saveImageOnDB(imagePath, savedArticle); // salva il path nel DB
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to save image", e);
@@ -58,11 +114,10 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         return modelMapper.map(savedArticle, ArticleDTO.class);
     }
 
-
     @Override
     public void delete(Long key) {
         Article article = articleRepository.findById(key)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         try {
             if (article.getImage() != null) {
@@ -76,7 +131,6 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
 
         articleRepository.deleteById(key);
     }
-
 
     @Override
     public ArticleDTO read(Long key) {
@@ -103,7 +157,8 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        Article existingArticle = articleRepository.findById(key).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Article existingArticle = articleRepository.findById(key)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         updatedArticle.setId(key);
         updatedArticle.setUser(existingArticle.getUser());
 
@@ -138,11 +193,10 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         return modelMapper.map(saved, ArticleDTO.class);
     }
 
-
     public List<ArticleDTO> searchByCategory(Category category) {
         List<ArticleDTO> dtos = new ArrayList<ArticleDTO>();
         for (Article article : articleRepository.findByCategory(category)) {
-            dtos.add(modelMapper.map(article, ArticleDTO.class));            
+            dtos.add(modelMapper.map(article, ArticleDTO.class));
         }
         return dtos;
     }
@@ -150,7 +204,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
     public List<ArticleDTO> searchByUser(User user) {
         List<ArticleDTO> dtos = new ArrayList<ArticleDTO>();
         for (Article article : articleRepository.findByUser(user)) {
-            dtos.add(modelMapper.map(article, ArticleDTO.class));            
+            dtos.add(modelMapper.map(article, ArticleDTO.class));
         }
         return dtos;
     }

@@ -14,6 +14,32 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+/**
+ * Entità JPA che rappresenta un ordine effettuato da un utente.
+ *
+ * Attributi:
+ * - id: identificativo univoco dell'ordine (generato automaticamente)
+ * - utenteId: ID dell’utente autore dell’ordine (ridondante rispetto all'entità
+ * user, ma può essere utile per query semplificate)
+ * - dataOrdine: data e ora in cui è stato effettuato l’ordine
+ * - totale: importo complessivo dell’ordine
+ * - user: riferimento all'utente che ha effettuato l’ordine (relazione
+ * ManyToOne)
+ * - articoli: lista degli articoli contenuti nell’ordine (relazione OneToMany
+ * verso ArticoloOrdine)
+ *
+ * Annotazioni:
+ * - @Entity: identifica la classe come entità JPA
+ * - @Data: genera automaticamente getter, setter, equals, hashCode, toString
+ * (Lombok)
+ * - @GeneratedValue: strategia per la generazione automatica dell’ID
+ * - @JoinColumn: specifica la foreign key per l'associazione con l'utente
+ * - @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL): relazione
+ * uno-a-molti con ArticoloOrdine,
+ * dove ogni articolo è legato a un ordine specifico e le operazioni sono
+ * propagate (es. salvataggio o cancellazione)
+ */
+
 @Entity
 @Data
 public class Ordine {
@@ -29,8 +55,8 @@ public class Ordine {
   private BigDecimal totale;
 
   @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL)
   private List<ArticoloOrdine> articoli;

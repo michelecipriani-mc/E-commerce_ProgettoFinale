@@ -7,6 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object (DTO) per rappresentare i dati di un utente.
+ * Utilizzato per trasferire informazioni tra il client e il server,
+ * ad esempio durante la registrazione o la modifica del profilo.
+ * 
+ * Contiene campi base dell'utente con le relative annotazioni di validazione:
+ * - id: identificatore univoco dell'utente
+ * - firstName: nome dell'utente, obbligatorio
+ * - lastName: cognome dell'utente, obbligatorio
+ * - email: indirizzo email, obbligatorio e deve essere in formato valido
+ * - password: password dell'utente, obbligatoria
+ */
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,5 +40,5 @@ public class UserDTO {
 
     @NotEmpty(message = "Required field Password must not be empty..")
     private String password;
-    
+
 }

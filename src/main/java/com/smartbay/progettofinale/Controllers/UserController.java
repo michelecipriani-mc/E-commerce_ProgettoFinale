@@ -1,4 +1,5 @@
 package com.smartbay.progettofinale.Controllers;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,7 +49,7 @@ public class UserController {
     @Autowired
     private CategoryService categoryService;
 
-        @Autowired
+    @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping("/")
@@ -64,9 +65,10 @@ public class UserController {
     }
 
     /**
-     * Gestisce la richiesta GET per visualizzare le informazioni di un utente specifico.
+     * Gestisce la richiesta GET per visualizzare le informazioni di un utente
+     * specifico.
      *
-     * @param id L'identificativo dell'utente da visualizzare.
+     * @param id        L'identificativo dell'utente da visualizzare.
      * @param viewModel L'oggetto Model usato per passare dati alla vista.
      * @return Il nome del template Thymeleaf da renderizzare, ovvero "user".
      */
@@ -93,7 +95,7 @@ public class UserController {
     }
 
     @PostMapping("/addbalance")
-    public String addBalance(@RequestParam("amount") BigDecimal amount, Model viewModel, 
+    public String addBalance(@RequestParam("amount") BigDecimal amount, Model viewModel,
             RedirectAttributes redirectAttributes) {
 
         try {
@@ -110,50 +112,69 @@ public class UserController {
         return "redirect:/user/dashboard";
     }
 
-
-
+    // Mostra la pagina di registrazione
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("user", new UserDTO());
         return "auth/register";
     }
 
+    // Mostra la pagina di login
     @GetMapping("/login")
     public String login() {
         return "auth/login";
     }
 
+    /**
+     * Gestisce il salvataggio dei dati di registrazione utente.
+     *
+     * - Verifica che l'email non sia già registrata
+     * - Valida i dati del form
+     * - Se tutto è corretto, salva l'utente e mostra un messaggio di successo
+     */
     @PostMapping("/register/save")
-    public String registration(@Valid @ModelAttribute("user") UserDTO userDto, 
-                                BindingResult result, Model model, 
-                                RedirectAttributes redirectAttributes, 
-                                HttpServletRequest request, HttpServletResponse response) {
+    public String registration(@Valid @ModelAttribute("user") UserDTO userDto,
+            BindingResult result, Model model,
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest request, HttpServletResponse response) {
+        // Verifica se l'email è già presente
         User existingUser = userService.findUserByEmail(userDto.getEmail());
         if (existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()) {
             result.rejectValue("email", null, "There is already an account registered with the same email");
         }
-
+        // In caso di errori, ricarica il form
         if (result.hasErrors()) {
             model.addAttribute("user", userDto);
-            return "auth/register";            
+            return "auth/register";
         }
-
+        // Salvataggio dell'utente e redirect alla home
         userService.saveUser(userDto, redirectAttributes, request, response);
         redirectAttributes.addFlashAttribute("successMessage", "Registration successful!");
         return "redirect:/";
     }
 
+    /**
+     * Mostra tutti gli articoli pubblicati da un determinato utente.
+     */
     @GetMapping("/search/{id}")
     public String userArticlesSearch(@PathVariable("id") Long id, Model viewModel) {
         User user = userService.find(id);
         viewModel.addAttribute("title", "All articles for user " + user.getUsername());
 
         List<ArticleDTO> articles = articleService.searchByUser(user);
-        List<ArticleDTO> acceptedArticles = articles.stream().filter(article -> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
+        // Mostra solo gli articoli accettati
+        List<ArticleDTO> acceptedArticles = articles.stream()
+                .filter(article -> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
         viewModel.addAttribute("articles", acceptedArticles);
         return "article/articles";
     }
 
+    /**
+     * Dashboard per l'amministratore.
+     * Mostra:
+     * - Richieste di carriera da valutare
+     * - Elenco di tutte le categorie
+     */
     @GetMapping("/admin/dashboard")
     public String adminDashboard(Model viewModel) {
         viewModel.addAttribute("title", "Request received");
@@ -162,6 +183,12 @@ public class UserController {
         return "admin/dashboard";
     }
 
+    /**
+     * Dashboard per il revisore.
+     * Mostra:
+     * - Articoli in attesa di revisione
+     * - Articoli già revisionati
+     */
     @GetMapping("/revisor/dashboard")
     public String revisorDashboard(Model viewModel) {
         viewModel.addAttribute("title", "Articles to review");
@@ -172,15 +199,18 @@ public class UserController {
         viewModel.addAttribute("reviewedArticles", articleRepository.findByIsAcceptedIsNotNull());
         return "revisor/dashboard";
     }
-    
 
+    /**
+     * Dashboard del venditore (SELLER).
+     * Mostra tutti gli articoli creati dall'utente autenticato.
+     */
     @GetMapping("/seller/dashboard")
     public String writerDashboard(Model viewModel, Principal principal) {
         viewModel.addAttribute("title", "Your articles");
-        List<ArticleDTO> userArticles =articleService.readAll().stream().filter(article -> article.getUser().getEmail().equals(principal.getName())).toList();
-        viewModel.addAttribute("articles", userArticles);  
+        List<ArticleDTO> userArticles = articleService.readAll().stream()
+                .filter(article -> article.getUser().getEmail().equals(principal.getName())).toList();
+        viewModel.addAttribute("articles", userArticles);
         return "seller/dashboard";
     }
-    
-}
 
+}

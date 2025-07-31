@@ -16,6 +16,12 @@ import com.smartbay.progettofinale.Models.Image;
 import com.smartbay.progettofinale.Repositories.ImageRepository;
 import jakarta.transaction.Transactional;
 
+/**
+ * Implementazione del servizio per la gestione delle immagini associate agli
+ * articoli.
+ * Supporta il salvataggio delle immagini sia su disco che nel database, e la
+ * loro cancellazione.
+ */
 @Service
 public class ImageServiceImpl implements ImageService {
 

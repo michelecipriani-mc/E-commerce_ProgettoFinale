@@ -7,17 +7,25 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.smartbay.progettofinale.Models.Article;
 
+/**
+ * Interfaccia per la gestione delle immagini associate agli articoli.
+ * Definisce metodi per salvare immagini su disco e nel database, e per
+ * eliminarle.
+ */
 public interface ImageService {
 
     /**
      * Salva il path dell'immagine nel database associandola a un articolo.
-     * @param url percorso pubblico dell'immagine (es. /images/nomefile.jpg)
+     * 
+     * @param url     percorso pubblico dell'immagine (es. /images/nomefile.jpg)
      * @param article entità Article associata
      */
     void saveImageOnDB(String url, Article article);
 
     /**
-     * Salva l'immagine nel file system locale (in /static/images) e restituisce il path pubblico.
+     * Salva l'immagine nel file system locale (in /static/images) e restituisce il
+     * path pubblico.
+     * 
      * @param file immagine ricevuta come MultipartFile
      * @return path accessibile via browser (es. /images/nomefile.jpg)
      * @throws IOException se fallisce il salvataggio
@@ -26,6 +34,7 @@ public interface ImageService {
 
     /**
      * Elimina l'immagine dal file system locale e dal database.
+     * 
      * @param imagePath path dell'immagine da eliminare (es. /images/nomefile.jpg)
      * @throws IOException se fallisce l'eliminazione
      */

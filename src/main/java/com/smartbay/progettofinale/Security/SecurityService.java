@@ -24,21 +24,24 @@ public class SecurityService {
         return utente != null ? utente.getId() : null;
     }
 
-
-
     /**
      * Restituisce l'utente attualmente autenticato nel contesto di sicurezza.
      *
      * <p>
-     * Se l'utente è anonimo (ad esempio, non loggato ma in un contesto pubblico), restituisce
-     * {@code null}. In caso di problemi con l'autenticazione (assenza di contesto, oggetto
-     * {@code principal} non valido, ecc.), viene lanciata un'eccezione per facilitare il debugging
+     * Se l'utente è anonimo (ad esempio, non loggato ma in un contesto pubblico),
+     * restituisce
+     * {--@code null}. In caso di problemi con l'autenticazione (assenza di
+     * contesto, oggetto
+     * {--@code principal} non valido, ecc.), viene lanciata un'eccezione per
+     * facilitare il debugging
      * e impedire comportamenti imprevisti.
      * </p>
      *
-     * @return L'entità {@code User} corrispondente all'utente autenticato, oppure {@code null} se
+     *@return L'entità {--@code User} corrispondente all'utente autenticato, oppure
+     *         {--@code null} se
      *         anonimo.
-     * @throws IllegalStateException se il contesto di sicurezza è mal configurato o corrotto.
+     * @throws IllegalStateException se il contesto di sicurezza è mal configurato o
+     *                               corrotto.
      */
     public User getActiveUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
