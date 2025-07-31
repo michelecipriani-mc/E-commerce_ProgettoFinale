@@ -92,8 +92,10 @@
                             class="card-img-top imgCard" alt="article image">
                         <div class="card-body bg-body-secondary d-flex flex-column">
                             <h5 class="card-title" th:text="${article.title}"></h5>
-                            <p class="card-text" th:text="${article.subtitle}"></p>
                             <p class="card-text" th:text="${article.user.username}"></p>
+                            <div class="d-flex">
+                                <p class="card-text" th:text="${article.price}"></p><span>€</span>
+                            </div>
                             <div class="d-flex justify-content-end align-items-center">
                                 <a th:href="@{/articles/detail/{id}(id=${article.id})}"
                                     class="btn btn-secondary mx-1">Show</a>

@@ -63,37 +63,42 @@
     </div>
 
     <!-- ORDINI EFFETTUATI -->
-    <h2 class="mb-4">Storico Ordini</h2>
-
-    <div th:if="${#lists.isEmpty(ordini)}">
-        <p>Nessun ordine trovato.</p>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center align-items-center flex-column">
+                <h2 class="mb-4">Storico Ordini</h2>
+                <div th:if="${#lists.isEmpty(ordini)}">
+                    <p>Nessun ordine trovato.</p>
+                </div>
+            </div>
+            <div class="col-12">
+                <div th:each="ordine : ${ordini}" class="mb-5 border p-3 rounded shadow-sm">
+                    <h5>Ordine: <span th:text="${ordine.id}"></span></h5>
+                    <h6>Data: <span th:text="${#temporals.format(ordine.dataOrdine, 'dd/MM/yyyy HH:mm')}"></span></h6>
+                    <h6>Totale: € <span th:text="${ordine.totale}"></span></h6>
+                    <table class="table table-bordered mt-3">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Titolo</th>
+                                <th>Sottotitolo</th>
+                                <th>Prezzo</th>
+                                <th>Quantità</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="articoloQuantita : ${ordine.articoli}">
+                                <td th:text="${articoloQuantita.articolo.title}"></td>
+                                <td th:text="${articoloQuantita.articolo.subtitle}"></td>
+                                <td th:text="${articoloQuantita.articolo.price}"></td>
+                                <td th:text="${articoloQuantita.quantita}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    
 
-    <div th:each="ordine : ${ordini}" class="mb-5 border p-3 rounded shadow-sm">
-        <h5>Ordine: <span th:text="${ordine.id}"></span></h5>
-        <h6>Data: <span th:text="${#temporals.format(ordine.dataOrdine, 'dd/MM/yyyy HH:mm')}"></span></h6>
-        <h6>Totale: € <span th:text="${ordine.totale}"></span></h6>
-
-        <table class="table table-bordered mt-3">
-            <thead class="table-light">
-                <tr>
-                    <th>Titolo</th>
-                    <th>Sottotitolo</th>
-                    <th>Prezzo</th>
-                    <th>Quantità</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="articoloQuantita : ${ordine.articoli}">
-                    <td th:text="${articoloQuantita.articolo.title}"></td>
-                    <td th:text="${articoloQuantita.articolo.subtitle}"></td>
-                    <td th:text="${articoloQuantita.articolo.price}"></td>
-                    <td th:text="${articoloQuantita.quantita}"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
 
     <!-- FOOTER -->
     <footer th:insert="~{index :: footer}" class="smartbay-footer mt-5"></footer>

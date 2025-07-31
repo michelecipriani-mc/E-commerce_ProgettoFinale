@@ -64,7 +64,7 @@
   width: 100%;
   padding: 20px;
   background: linear-gradient(rgba(255, 255, 255, 0.4)), url('/images/header.png');
-  background-position: center;
+  background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
 }
