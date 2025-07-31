@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.smartbay.progettofinale.DTO.ArticleDTO;
 import com.smartbay.progettofinale.DTO.UserDTO;
 import com.smartbay.progettofinale.Models.Article;
@@ -30,6 +29,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Controller
 public class UserController {
 
@@ -165,9 +165,14 @@ public class UserController {
     @GetMapping("/revisor/dashboard")
     public String revisorDashboard(Model viewModel) {
         viewModel.addAttribute("title", "Articles to review");
+        viewModel.addAttribute("titleReviewed", "Reviewed articles");
+        // Articoli da revisionare
         viewModel.addAttribute("articles", articleRepository.findByIsAcceptedIsNull());
+        // Articoli già revisionati
+        viewModel.addAttribute("reviewedArticles", articleRepository.findByIsAcceptedIsNotNull());
         return "revisor/dashboard";
     }
+    
 
     @GetMapping("/seller/dashboard")
     public String writerDashboard(Model viewModel, Principal principal) {
