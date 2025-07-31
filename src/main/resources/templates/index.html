@@ -4,6 +4,7 @@
 <head th:fragment="head">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/Logo.png}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Font Awesome -->
@@ -27,10 +28,11 @@
                 <div class="col-4 d-flex justify-content-start align-items-center">
                     <!-- Brand -->
                     <a class="navbar-brand me-2 mb-1 d-flex justify-content-center align-items-center" th:href="@{/}">
-                        <!-- <img src="..." width="50" height="50" alt="MikeTimes logo"
-                            class="img-fluid rounded-pill" /> -->
+                        <img th:src="@{/images/Logo.png}" width="50" height="50" alt="SmartBay logo"
+                            class="img-fluid" />
                     </a>
-                    <form class="input-group w-auto my-auto d-none d-sm-flex" th:action="@{/articles/search}" method="get">
+                    <form class="input-group w-auto my-auto d-none d-sm-flex" th:action="@{/articles/search}"
+                        method="get">
                         <input type="search" class="form-control rounded me-2" placeholder="Search" name="keyword"
                             aria-label="Search">
                         <button class="btn btn-smartbay rounded-pill" type="submit">
@@ -87,7 +89,8 @@
                             <div class="d-flex">
                                 <a class="nav-link" th:href="@{/revisor/dashboard}">
                                     <i class="fas fa-bell fa-lg"></i>
-                                    <span th:if="${articlesToBeRevised > 0}" class="badge rounded-pill bg-danger text-white"
+                                    <span th:if="${articlesToBeRevised > 0}"
+                                        class="badge rounded-pill bg-danger text-white"
                                         th:text="${articlesToBeRevised}"></span>
                                 </a>
                             </div>
@@ -97,7 +100,8 @@
                             <div class="d-flex">
                                 <a class="nav-link" th:href="@{/seller/dashboard}">
                                     <i class="fa-solid fa-shop fa-lg"></i>
-                                    <span th:if="${articlesToBeRevised > 0}" class="badge rounded-pill bg-danger text-white"
+                                    <span th:if="${articlesToBeRevised > 0}"
+                                        class="badge rounded-pill bg-danger text-white"
                                         th:text="${articlesToBeRevised}"></span>
                                 </a>
                             </div>
@@ -123,6 +127,9 @@
                         <li sec:authorize="hasRole('ROLE_USER')" class="nav-item me-3 me-lg-1">
                             <a class="nav-link" th:href="@{/carrello}">
                                 <i class="fa-solid fa-cart-shopping"></i>
+                                <span th:if="${quantitaTotaleCarrello > 0}"
+                                    class="badge rounded-pill bg-danger text-white"
+                                    th:text="${quantitaTotaleCarrello}">0</span>
                             </a>
                         </li>
                         <!-- Logout -->
@@ -133,7 +140,7 @@
                         </li>
                     </ul>
                 </div>
-            <!-- Right elements -->
+                <!-- Right elements -->
             </div>
         </div>
     </nav>
@@ -145,42 +152,38 @@
         <div class="container p-4">
             <!-- Section: Social media -->
             <section class="mb-4">
-            <!-- Facebook -->
-            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!" role="button"
-                ><i class="fab fa-facebook-f"></i
-            ></a>
+                <!-- Facebook -->
+                <a data-mdb-ripple-init class="btn btn-outline color btn-floating m-1" href="#!" role="button"><i
+                        class="fab fa-facebook-f"></i></a>
 
-            <!-- Twitter -->
-            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!" role="button"
-                ><i class="fab fa-twitter"></i
-            ></a>
+                <!-- Twitter -->
+                <a data-mdb-ripple-init class="btn btn-outline color btn-floating m-1" href="#!" role="button"><i
+                        class="fab fa-twitter"></i></a>
 
-            <!-- Google -->
-            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!" role="button"
-                ><i class="fab fa-google"></i
-            ></a>
+                <!-- Google -->
+                <a data-mdb-ripple-init class="btn btn-outline color btn-floating m-1" href="#!" role="button"><i
+                        class="fab fa-google"></i></a>
 
-            <!-- Instagram -->
-            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!" role="button"
-                ><i class="fab fa-instagram"></i
-            ></a>
+                <!-- Instagram -->
+                <a data-mdb-ripple-init class="btn btn-outline color btn-floating m-1" href="#!" role="button"><i
+                        class="fab fa-instagram"></i></a>
 
-            <!-- Linkedin -->
-            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!" role="button"
-                ><i class="fab fa-linkedin-in"></i
-            ></a>
+                <!-- Linkedin -->
+                <a data-mdb-ripple-init class="btn btn-outline color btn-floating m-1" href="#!" role="button"><i
+                        class="fab fa-linkedin-in"></i></a>
 
-            <!-- Github -->
-            <a data-mdb-ripple-init class="btn btn-outline btn-floating m-1" href="#!" role="button"
-                ><i class="fab fa-github"></i
-            ></a>
+                <!-- Github -->
+                <a data-mdb-ripple-init class="btn btn-outline color btn-floating m-1" href="#!" role="button"><i
+                        class="fab fa-github"></i></a>
             </section>
             <!-- Section: Social media -->
 
             <!-- Section: Text -->
             <section class="mb-4">
                 <p>
-                    Are you a dedicated entrepreneur with exceptional products to offer? At SmartBay, we provide a trusted platform for sellers to reach discerning customers and expand their business. We invite committed sellers to apply and become part of a growing community focused on quality and excellence.
+                    Are you a dedicated entrepreneur with exceptional products to offer? At SmartBay, we provide a
+                    trusted platform for sellers to reach discerning customers and expand their business. We invite
+                    committed sellers to apply and become part of a growing community focused on quality and excellence.
                 </p>
             </section>
             <!-- Section: Text -->
@@ -200,25 +203,26 @@
 
                         <ul class="list-unstyled mb-0 d-flex justify-content-between">
                             <li>
-                                <p class="text-body text-white">Contacts</p>
+                                <p class="text-white p-2 m-0">Contacts</p>
                                 <ul class="lifooter">
-                                    <li class="text-start"><i class="fas fa-phone me-3"></i>+39 378 2157 454</li>
-                                    <li class="text-start"><i class="fas fa-home me-3"></i>New York, NY 10012, US</li>
-                                    <li class="text-start"><i class="fas fa-envelope me-3"></i>admin@smartbay.com</li>
+                                    <li class="text-start mb-1"><i class="fas fa-phone me-3"></i>+39 378 2157 454</li>
+                                    <li class="text-start mb-1"><i class="fas fa-home me-3"></i>New York, NY 10012, US</li>
+                                    <li class="text-start mb-1"><i class="fas fa-envelope me-3"></i>admin@smartbay.com</li>
                                 </ul>
                             </li>
                             <li>
-                                <p class="text-body">Delivery</p>
+                                <p class="text-white p-2 m-0">Delivery</p>
                                 <img th:src="@{/images/swift_parcel.png}" width="40" height="40" class="img-fluid">
                             </li>
                             <li>
-                                <p class="text-body text-white">Payment Methods</p>
-                                <img th:src="@{/images/mobile_payment_app.png}" width="40" height="40" class="rounded img-fluid">
-                                <br>
-                                <img th:src="@{/images/payment_app.png}" width="40" height="40" class="rounded mt-1 img-fluid">
+                                <p class="text-white p-2 m-0">Payment Methods</p>
+                                <img th:src="@{/images/mobile_payment_app.png}" width="40" height="40"
+                                    class="rounded img-fluid mx-2">
+                                <img th:src="@{/images/payment_app.png}" width="40" height="40"
+                                    class="rounded mt-1 img-fluid mx-2">
                             </li>
                             <li>
-                                <p class="text-body">App Store</p>
+                                <p class="text-white p-2 m-0">App Store</p>
                                 <img th:src="@{/images/dpwnload_app.png}" width="180" height="100">
                             </li>
                         </ul>

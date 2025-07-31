@@ -1,10 +1,5 @@
-/* body {
-    background-color: white;
-} */
-
 /* Messaggi di errore */
 .errorMessage {
-    margin-top: 80px;
     z-index: 99;
 }
 
@@ -127,6 +122,14 @@
 
 .copyColor {
     background-color: #001D3D;
+}
+
+.color {
+  color: #FFC300;
+}
+
+.color:hover {
+  color: white;
 }
 
 /* ARTICLE CARD */
@@ -545,4 +548,18 @@
 }
 .bin-button:active {
   transform: scale(0.9);
+}
+
+
+/* LOGO HEADER HOME */
+.HeaderLogoHome {
+  width: 300px;
+  
+  position: absolute;
+  top: 106%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--color-BgCustom);
+  font-size: 70px;
 }
