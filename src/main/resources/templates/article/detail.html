@@ -75,6 +75,11 @@
                                 <p th:text="${article.user.username}">User</p>
                             </a>
                         </div>
+                        
+                        <div class="d-flex text-muted justify-content-center w-100 fs-5">
+                            Price:
+                            <p class="ms-2 fs-5" th:text="${article.price}"></p><span class="fs-5">€</span>
+                        </div>
                     </div>
 
                     <hr>

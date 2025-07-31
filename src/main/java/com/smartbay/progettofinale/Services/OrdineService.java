@@ -1,5 +1,6 @@
 package com.smartbay.progettofinale.Services;
 
+import com.smartbay.progettofinale.DTO.ArticleDTO;
 import com.smartbay.progettofinale.DTO.ArticoloQuantitaDTO;
 import com.smartbay.progettofinale.DTO.OrdineDTO;
 import com.smartbay.progettofinale.Models.Article;
@@ -11,6 +12,7 @@ import com.smartbay.progettofinale.Repositories.ArticleRepository;
 import com.smartbay.progettofinale.Repositories.OrdineRepository;
 import com.smartbay.progettofinale.Repositories.UserRepository;
 import com.smartbay.progettofinale.Security.SecurityService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -136,10 +138,11 @@ public class OrdineService {
     public List<OrdineDTO> getOrdiniUtente() {
         User user = securityService.getActiveUser();
 
-        return ordineRepository.findByUser(user).stream()
+        return ordineRepository.findByUserOrderByDataOrdineDesc(user).stream()
                 .map(this::EntityToDTO)
                 .collect(Collectors.toList());
     }
+
 
     /**
      * Converte un'entità Ordine in un DTO OrdineDTO, inclusi gli articoli
@@ -153,10 +156,23 @@ public class OrdineService {
             return null;
         }
 
+        // Mappatura livelli più alti: id, utenteId, dataOrdine, totale
         OrdineDTO dto = modelMapper.map(ordine, OrdineDTO.class);
 
+        // Mappatura manuale della lista articoli
         dto.setArticoli(ordine.getArticoli().stream()
-                .map((x) -> modelMapper.map(x, ArticoloQuantitaDTO.class))
+                .map(articoloOrdine -> {
+                    // Ottiene l'entità articolo completa dal DB
+                    Article article = articleRepository.findById(articoloOrdine.getArticoloId())
+                            .orElseThrow(() -> new EntityNotFoundException(
+                                    "Article not found with id: " + articoloOrdine.getArticoloId()));
+
+                    // Mappatura Article -> ArticleDTO
+                    ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
+
+                    // Creazione ArticoloQuantitaDTO
+                    return new ArticoloQuantitaDTO(articleDTO, articoloOrdine.getQuantita());
+                })
                 .collect(Collectors.toList()));
 
         return dto;

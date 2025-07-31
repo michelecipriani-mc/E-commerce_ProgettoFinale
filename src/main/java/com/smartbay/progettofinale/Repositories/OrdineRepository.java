@@ -31,4 +31,6 @@ import com.smartbay.progettofinale.Models.User;
 
 public interface OrdineRepository extends JpaRepository<Ordine, Long> {
   List<Ordine> findByUser(User user);
+
+  List<Ordine> findByUserOrderByDataOrdineDesc(User user);
 }

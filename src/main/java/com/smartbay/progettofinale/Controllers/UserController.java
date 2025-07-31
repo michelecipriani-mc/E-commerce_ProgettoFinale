@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.smartbay.progettofinale.DTO.ArticleDTO;
+import com.smartbay.progettofinale.DTO.OrdineDTO;
 import com.smartbay.progettofinale.DTO.UserDTO;
 import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.User;
@@ -22,6 +23,7 @@ import com.smartbay.progettofinale.Repositories.ArticleRepository;
 import com.smartbay.progettofinale.Repositories.CareerRequestRepository;
 import com.smartbay.progettofinale.Services.ArticleService;
 import com.smartbay.progettofinale.Services.CategoryService;
+import com.smartbay.progettofinale.Services.OrdineService;
 import com.smartbay.progettofinale.Services.UserService;
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -51,6 +53,9 @@ public class UserController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private OrdineService ordineService;
 
     @GetMapping("/")
     public String home(Model viewModel) {
@@ -90,6 +95,10 @@ public class UserController {
     public String dashboard(Model viewModel) {
         // Aggiunge al modello le informazioni dell'utente necessarie per la dashboard
         viewModel.addAttribute("user", userService.dashboard());
+
+        // Recupera gli ordini dell'utente loggato
+        List<OrdineDTO> ordiniUtente = ordineService.getOrdiniUtente(); // o con userId se necessario
+        viewModel.addAttribute("ordini", ordiniUtente);
 
         return "user/dashboard"; // Corrisponde al file templates/user/dashboard.html
     }
