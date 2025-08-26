@@ -32,14 +32,15 @@ public class CareerRequestServiceImpl implements CareerRequestService{
     
     @Transactional
     public boolean isRoleAlreadyAssigned(User user, CareerRequest careerRequest) {
-        List<Long> allUserIds = careerRequestRepository.findAllUserIds();
-
-        if (!allUserIds.contains(user.getId())) {
-            return false;
-        }
-
+        // Controlla se il ruolo è già stato assegnato
         List<Long> request = careerRequestRepository.findByUserId(user.getId());
-        return request.stream().anyMatch(roleId -> roleId.equals(careerRequest.getRole().getId()));
+        boolean isRoleAlreadyAssigned = request.contains(careerRequest.getRole().getId());
+        // Controlla se esiste già una richiesta aperta per lo stesso ruolo
+        boolean isRoleAlreadyRequested = careerRequestRepository
+            .findByUserAndRoleAndIsCheckedFalse(user, careerRequest.getRole())
+            .isPresent();
+
+        return isRoleAlreadyAssigned || isRoleAlreadyRequested;
     }
 
     public void save(CareerRequest careerRequest, User user) {
@@ -47,7 +48,7 @@ public class CareerRequestServiceImpl implements CareerRequestService{
         careerRequest.setIsChecked(false);
         careerRequestRepository.save(careerRequest);
 
-        emailService.sendSimpleEmail("admin@smartbay.com", "Request for the role: " + careerRequest.getRole().getName(), "new request for collaboration from" + user.getUsername());
+        emailService.sendSimpleEmail("admin@smartbay.com", "Request for the role: " + careerRequest.getRole().getName(), " new request for collaboration from " + user.getUsername());
     }
 
     @Override
@@ -73,9 +74,4 @@ public class CareerRequestServiceImpl implements CareerRequestService{
     public CareerRequest find(Long id) {
         return careerRequestRepository.findById(id).get();
     }
-
-    
-
-
-    
 }

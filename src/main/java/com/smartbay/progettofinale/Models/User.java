@@ -32,7 +32,7 @@ public class User {
     @Column(nullable = true)
     private BigDecimal balance;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "users_roles",
         joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
@@ -40,5 +40,9 @@ public class User {
     )
 
     private List<Role> roles = new ArrayList<>();
+
+    // Collegamento con le richieste di carriera
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<CareerRequest> careerRequests = new ArrayList<>();
     
 }

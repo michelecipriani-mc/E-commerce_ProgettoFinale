@@ -1,5 +1,6 @@
 package com.smartbay.progettofinale.Models;
 
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,4 +25,7 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
     
+    // Collegamento con le richieste di carriera
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private List<CareerRequest> careerRequests = new ArrayList<>();
 }

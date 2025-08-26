@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "career_request")
+@Table(name = "career_request", uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "role_id"})})
 public class CareerRequest {
 
     @Id
@@ -20,11 +20,11 @@ public class CareerRequest {
     @Column
     private Boolean isChecked;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
     
