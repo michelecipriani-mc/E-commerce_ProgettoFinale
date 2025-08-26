@@ -5,15 +5,14 @@ import org.springframework.stereotype.Service;
 import com.smartbay.progettofinale.DTO.ArticleDTO;
 import com.smartbay.progettofinale.DTO.ArticoloQuantitaDTO;
 import com.smartbay.progettofinale.DTO.CarrelloDTO;
-import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.Carrello;
 import com.smartbay.progettofinale.Repositories.ArticleRepository;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Service
@@ -23,7 +22,7 @@ public class CarrelloService {
 
   private final ModelMapper modelMapper;
 
-  private final Map<Long, Carrello> carrelli = new HashMap<>();
+  private final Map<Long, Carrello> carrelli = new ConcurrentHashMap<>();
 
   public CarrelloService(ArticleRepository articoloRepository, ModelMapper modelMapper) {
     this.articoloRepository = articoloRepository;
@@ -37,7 +36,7 @@ public class CarrelloService {
       return carrelli.get(idUtente);
     }
 
-    Carrello carrello = new Carrello(idUtente, new HashMap<>());
+    Carrello carrello = new Carrello(idUtente, new ConcurrentHashMap<>());
 
     carrelli.put(idUtente, carrello);
 
