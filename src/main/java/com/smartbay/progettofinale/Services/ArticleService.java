@@ -1,4 +1,5 @@
 package com.smartbay.progettofinale.Services;
+
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import com.smartbay.progettofinale.Repositories.ArticleRepository;
 import com.smartbay.progettofinale.Repositories.UserRepository;
 
 @Service
-public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
+public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
 
     @Autowired
     private UserRepository userRepository;
@@ -33,12 +34,16 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
     @Autowired
     private ImageService imageService;
 
-    
+    @Autowired
+    private CarrelloService carrelloService;
+
     @Override
     public ArticleDTO create(Article article, Principal principal, MultipartFile file) {
         if (principal != null) {
-            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user = userRepository.findById(userDetails.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+                    .getPrincipal();
+            User user = userRepository.findById(userDetails.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             article.setUser(user);
         }
 
@@ -48,7 +53,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         if (file != null && !file.isEmpty()) {
             try {
                 String imagePath = imageService.saveImageOnDisk(file).get(); // salva su disco
-                imageService.saveImageOnDB(imagePath, savedArticle);         // salva il path nel DB
+                imageService.saveImageOnDB(imagePath, savedArticle); // salva il path nel DB
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to save image", e);
@@ -58,11 +63,10 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         return modelMapper.map(savedArticle, ArticleDTO.class);
     }
 
-
     @Override
     public void delete(Long key) {
         Article article = articleRepository.findById(key)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         try {
             if (article.getImage() != null) {
@@ -75,8 +79,11 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         }
 
         articleRepository.deleteById(key);
-    }
 
+        // Rimuovi articolo da tutti i carrelli
+        carrelloService.rimuoviArticoloDaTuttiICarrelli(key);
+
+    }
 
     @Override
     public ArticleDTO read(Long key) {
@@ -103,7 +110,8 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        Article existingArticle = articleRepository.findById(key).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Article existingArticle = articleRepository.findById(key)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         updatedArticle.setId(key);
         updatedArticle.setUser(existingArticle.getUser());
 
@@ -130,6 +138,10 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         // Verifica se sono stati fatti cambiamenti
         if (!updatedArticle.equals(existingArticle)) {
             updatedArticle.setIsAccepted(null); // deve essere ri-approvato
+
+            // Rimuovi articolo da tutti i carrelli
+            carrelloService.rimuoviArticoloDaTuttiICarrelli(key);
+
         } else {
             updatedArticle.setIsAccepted(existingArticle.getIsAccepted());
         }
@@ -138,11 +150,10 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
         return modelMapper.map(saved, ArticleDTO.class);
     }
 
-
     public List<ArticleDTO> searchByCategory(Category category) {
         List<ArticleDTO> dtos = new ArrayList<ArticleDTO>();
         for (Article article : articleRepository.findByCategory(category)) {
-            dtos.add(modelMapper.map(article, ArticleDTO.class));            
+            dtos.add(modelMapper.map(article, ArticleDTO.class));
         }
         return dtos;
     }
@@ -150,7 +161,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long>{
     public List<ArticleDTO> searchByUser(User user) {
         List<ArticleDTO> dtos = new ArrayList<ArticleDTO>();
         for (Article article : articleRepository.findByUser(user)) {
-            dtos.add(modelMapper.map(article, ArticleDTO.class));            
+            dtos.add(modelMapper.map(article, ArticleDTO.class));
         }
         return dtos;
     }

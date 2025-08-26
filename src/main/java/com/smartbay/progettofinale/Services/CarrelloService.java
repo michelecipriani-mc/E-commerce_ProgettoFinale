@@ -62,6 +62,24 @@ public class CarrelloService {
     return this.carrelloToDTO(carrello);
   }
 
+  /**
+   * Rimuovi ogni istanza di un articolo da tutti i carrelli.
+   * Chiamato da ArticleService quando un articolo è modificato o eliminato
+   *
+   * @param idArticolo The ID of the article to be removed.
+   *    
+   */
+  public void rimuoviArticoloDaTuttiICarrelli(Long idArticolo) {
+
+    if (carrelli.isEmpty()) {
+      return;
+    }
+
+    for (Carrello carrello : carrelli.values()) {
+      carrello.rimuoviArticolo(idArticolo);
+    }
+  }
+
   public void svuotaCarrello(Long idUtente) {
     Carrello carrello = getCarrelloFromUtente(idUtente);
     carrello.svuota();
@@ -83,7 +101,7 @@ public class CarrelloService {
         .map(entry -> new ArticoloQuantitaDTO(
             modelMapper
                 .map(articoloRepository.findById(entry.getKey()).orElseThrow(), ArticleDTO.class),
-                    entry.getValue()))
+            entry.getValue()))
         .sorted(
             Comparator.comparing(a -> a.getArticolo().getTitle(), String.CASE_INSENSITIVE_ORDER))
         .toList();
