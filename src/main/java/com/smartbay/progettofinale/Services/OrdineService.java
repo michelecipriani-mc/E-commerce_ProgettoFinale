@@ -127,15 +127,14 @@ public class OrdineService {
         // Mappatura manuale della lista articoli
         dto.setArticoli(ordine.getArticoli().stream()
             .map(articoloOrdine -> {
-                // Ottiene l'entità articolo completa dal DB
-                Article article = articleRepository.findById(articoloOrdine.getArticoloId())
-                    .orElseThrow(() -> new EntityNotFoundException("Article not found with id: " +  articoloOrdine.getArticoloId()));
+                
+                // Inserimento Titolo, Prezzo, Quantità per storico ordini della dashboard
+                ArticleDTO articoloDTO = new ArticleDTO();
 
-                // Mappatura Article -> ArticleDTO
-                ArticleDTO articleDTO = modelMapper.map(article, ArticleDTO.class);
+                articoloDTO.setTitle(articoloOrdine.getTitoloArticolo());
+                articoloDTO.setPrice(articoloOrdine.getPrezzoSingolo());
 
-                // Creazione ArticoloQuantitaDTO
-                return new ArticoloQuantitaDTO(articleDTO, articoloOrdine.getQuantita());
+                return new ArticoloQuantitaDTO(articoloDTO, articoloOrdine.getQuantita());
             })
             .collect(Collectors.toList()));
 

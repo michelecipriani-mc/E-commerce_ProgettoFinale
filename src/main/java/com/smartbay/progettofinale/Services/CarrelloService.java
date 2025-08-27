@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 @Service
 public class CarrelloService {
 
@@ -62,6 +61,24 @@ public class CarrelloService {
     return this.carrelloToDTO(carrello);
   }
 
+  /**
+   * Rimuovi ogni istanza di un articolo da tutti i carrelli.
+   * Chiamato da {@code ArticoloService} quando un articolo è modificato o eliminato
+   *
+   * @param idArticolo ID dell'articolo da rimuovere.
+   * @see ArticoloService
+   */
+  public void rimuoviArticoloDaTuttiICarrelli(Long idArticolo) {
+
+    if (carrelli.isEmpty()) {
+      return;
+    }
+
+    for (Carrello carrello : carrelli.values()) {
+      carrello.rimuoviArticolo(idArticolo);
+    }
+  }
+
   public void svuotaCarrello(Long idUtente) {
     Carrello carrello = getCarrelloFromUtente(idUtente);
     carrello.svuota();
@@ -83,7 +100,7 @@ public class CarrelloService {
         .map(entry -> new ArticoloQuantitaDTO(
             modelMapper
                 .map(articoloRepository.findById(entry.getKey()).orElseThrow(), ArticleDTO.class),
-                    entry.getValue()))
+            entry.getValue()))
         .sorted(
             Comparator.comparing(a -> a.getArticolo().getTitle(), String.CASE_INSENSITIVE_ORDER))
         .toList();

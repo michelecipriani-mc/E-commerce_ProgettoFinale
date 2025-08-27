@@ -11,7 +11,7 @@
     <header th:insert="~{index :: navbar}"></header>
 
     <!-- DASHBOARD -->
-    <div class="container-fluis min-vh-100">
+    <div class="container-fluid min-vh-100">
         <div class="row justify-content-center align-items-center">
             <div class="col-12 text-center my-5">
                 <h2 class="smartbay-header">Welcome <span th:text="${user.username}">Utente</span> to your Dashboard
@@ -80,7 +80,6 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Titolo</th>
-                                <th>Sottotitolo</th>
                                 <th>Prezzo</th>
                                 <th>Quantità</th>
                             </tr>
@@ -88,7 +87,6 @@
                         <tbody>
                             <tr th:each="articoloQuantita : ${ordine.articoli}">
                                 <td th:text="${articoloQuantita.articolo.title}"></td>
-                                <td th:text="${articoloQuantita.articolo.subtitle}"></td>
                                 <td th:text="${articoloQuantita.articolo.price}"></td>
                                 <td th:text="${articoloQuantita.quantita}"></td>
                             </tr>
