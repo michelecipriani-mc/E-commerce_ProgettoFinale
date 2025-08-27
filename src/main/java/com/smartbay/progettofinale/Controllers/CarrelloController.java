@@ -41,6 +41,12 @@ public class CarrelloController {
     // Calcola il prezzo totale del carrello
     BigDecimal totale = carrelloService.getPrezzoTotaleCarrello(idUtente);
 
+
+    if (carrelloService.CarrelloIsModified(idUtente)) {
+      model.addAttribute("warning", "Warning: one or more items in your cart have been removed.");
+      carrelloService.ResetCarrelloModifiedFlag(idUtente);
+    }
+
     // Aggiunge il carrello e il totale al model per Thymeleaf
     model.addAttribute("carrello", carrello);
     model.addAttribute("totale", totale);

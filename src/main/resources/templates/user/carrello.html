@@ -23,6 +23,12 @@
                 <p th:text="${cartWarning}"></p>
             </div>
         </div>
+
+        <div th:if="${warning}">
+            <div class="alert alert-warning errorMessage mt-3" role="alert">
+                <p th:text="${warning}"></p>
+            </div>
+        </div>
     </div>
 
     <!-- SEZIONE CARRELLO -->

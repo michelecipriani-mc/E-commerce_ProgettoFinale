@@ -35,7 +35,7 @@ public class CarrelloService {
       return carrelli.get(idUtente);
     }
 
-    Carrello carrello = new Carrello(idUtente, new ConcurrentHashMap<>());
+    Carrello carrello = new Carrello(idUtente, new ConcurrentHashMap<>(), false);
 
     carrelli.put(idUtente, carrello);
 
@@ -76,7 +76,16 @@ public class CarrelloService {
 
     for (Carrello carrello : carrelli.values()) {
       carrello.rimuoviArticolo(idArticolo);
+      carrello.setModified(true);
     }
+  }
+
+  public boolean CarrelloIsModified(Long idUtente) {
+    return getCarrelloFromUtente(idUtente).isModified();
+  }
+
+  public void ResetCarrelloModifiedFlag(Long idUtente) {
+    getCarrelloFromUtente(idUtente).setModified(false);
   }
 
   public void svuotaCarrello(Long idUtente) {

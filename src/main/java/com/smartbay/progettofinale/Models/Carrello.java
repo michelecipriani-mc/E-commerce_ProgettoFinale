@@ -24,6 +24,9 @@ public class Carrello {
   // Mappa: (key: ID articolo) -> (value: quantità)
   private Map<Long, Integer> articles = new HashMap<>();
 
+  // Flag per indicare se un articolo è stato rimosso dal carrello di un utente
+  private boolean isModified = false;
+
 
 
   // --- Metodi
