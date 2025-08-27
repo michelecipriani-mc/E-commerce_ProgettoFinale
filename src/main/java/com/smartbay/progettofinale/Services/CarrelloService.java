@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 @Service
 public class CarrelloService {
 
@@ -64,10 +63,10 @@ public class CarrelloService {
 
   /**
    * Rimuovi ogni istanza di un articolo da tutti i carrelli.
-   * Chiamato da ArticleService quando un articolo è modificato o eliminato
+   * Chiamato da {@code ArticoloService} quando un articolo è modificato o eliminato
    *
-   * @param idArticolo The ID of the article to be removed.
-   *    
+   * @param idArticolo ID dell'articolo da rimuovere.
+   * @see ArticoloService
    */
   public void rimuoviArticoloDaTuttiICarrelli(Long idArticolo) {
 
