@@ -22,29 +22,66 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * Controller per la gestione delle categorie.
+ * <p>
+ * Mappa le richieste web agli endpoint per la gestione di categorie,
+ * inclusa creazione, modifica, eliminazione e ricerca.
+ */
 @Controller
 @RequestMapping("/categories")
 public class CategoryController {
+
+    /**
+     * Servizio per la gestione degli articoli.
+     */
     @Autowired
     private ArticleService articleService;
 
+    /**
+     * Servizio per la gestione delle categorie.
+     */
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * Mapper per la conversione tra DTO e entità.
+     */
     @Autowired
     private ModelMapper modelMapper;
 
+    /**
+     * Cerca e visualizza gli articoli di una categoria specifica.
+     * <p>
+     * Vengono mostrati solo gli articoli approvati.
+     *
+     * @param id        L'ID della categoria.
+     * @param viewModel Oggetto Model per la vista.
+     * @return Nome della vista per la pagina degli articoli.
+     */
     @GetMapping("/search/{id}")
     public String categorySearch(@PathVariable("id") Long id, Model viewModel) {
         CategoryDTO category = categoryService.read(id);
 
         viewModel.addAttribute("title", "All articles for category " + category.getName());
+
+        // Ricerca articoli per categoria
         List<ArticleDTO> articles = articleService.searchByCategory(modelMapper.map(category, Category.class));
+
+        // Filtro degli articoli per mostrare solo quelli approvati
         List<ArticleDTO> acceptedArticles = articles.stream().filter(article -> Boolean.TRUE.equals(article.getIsAccepted())).collect(Collectors.toList());
+
         viewModel.addAttribute("articles", acceptedArticles);
+
         return "article/articles";
     }
 
+    /**
+     * Mostra il form per la creazione di una nuova categoria.
+     *
+     * @param viewModel Oggetto Model per la vista.
+     * @return Nome della vista del form di creazione.
+     */
     @GetMapping("create")
     public String categoryCreate(Model viewModel) {
         viewModel.addAttribute("title", "Create a category");
@@ -52,6 +89,17 @@ public class CategoryController {
         return "category/create";
     }
 
+    /**
+     * Gestisce il salvataggio di una nuova categoria.
+     * <p>
+     * Se la validazione fallisce, il form viene ricaricato.
+     *
+     * @param category           La categoria da salvare.
+     * @param result             Risultato della validazione.
+     * @param redirectAttributes Attributi per il redirect.
+     * @param viewModel          Oggetto Model per la vista.
+     * @return Redirect alla dashboard dell'admin.
+     */
     @PostMapping
     public String categoryStore(@Valid @ModelAttribute("category") Category category, BindingResult result,
                                 RedirectAttributes redirectAttributes, Model viewModel) {
@@ -67,6 +115,13 @@ public class CategoryController {
         return "redirect:/admin/dashboard";
     }
 
+    /**
+     * Mostra il form per la modifica di una categoria.
+     *
+     * @param id        L'ID della categoria da modificare.
+     * @param viewModel Oggetto Model per la vista.
+     * @return Nome della vista del form di modifica.
+     */
     @GetMapping("/edit/{id}")
     public String categoryEdit(@PathVariable("id") Long id, Model viewModel) {
         viewModel.addAttribute("title", "Edit category");
@@ -74,6 +129,16 @@ public class CategoryController {
         return "category/update";
     }
 
+    /**
+     * Gestisce l'aggiornamento di una categoria esistente.
+     *
+     * @param id                 L'ID della categoria da aggiornare.
+     * @param category           La categoria con i dati aggiornati.
+     * @param result             Risultato della validazione.
+     * @param redirectAttributes Attributi per il redirect.
+     * @param viewModel          Oggetto Model per la vista.
+     * @return Redirect alla dashboard dell'admin.
+     */
     @PostMapping("/update/{id}")
     public String categoryUpdate(@PathVariable("id") Long id, @Valid @ModelAttribute("category") Category category, 
                                 BindingResult result, RedirectAttributes redirectAttributes, Model viewModel) {
@@ -89,6 +154,13 @@ public class CategoryController {
         return "redirect:/admin/dashboard";
     }
 
+    /**
+     * Elimina una categoria.
+     *
+     * @param id                 L'ID della categoria da eliminare.
+     * @param redirectAttributes Attributi per il redirect.
+     * @return Redirect alla dashboard dell'admin.
+     */
     @GetMapping("delete/{id}")
     public String categoryDelete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         
