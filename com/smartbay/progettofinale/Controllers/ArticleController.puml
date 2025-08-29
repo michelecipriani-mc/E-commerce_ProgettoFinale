@@ -14,10 +14,10 @@
     class "<size:14>ArticleController\n<size:10>com.smartbay.progettofinale.Controllers" as com.smartbay.progettofinale.Controllers.ArticleController [[ArticleController.html]] {
         +articlesIndex(Model): String
         +articleCreate(Model): String
-        +articlesStore(Article, BindingResult, RedirectAttributes, Principal, MultipartFile, Model): String
+        +articlesStore(Article, BindingResult, RedirectAttributes, Principal, MultipartFile[], Model): String
         +detailArticle(Long, Model): String
         +editArticle(Long, Model): String
-        +articleUpdate(Long, Article, BindingResult, RedirectAttributes, Principal, MultipartFile, Model): String
+        +articleUpdate(Long, Article, BindingResult, RedirectAttributes, Principal, MultipartFile[], Model): String
         +articleDelete(Long, RedirectAttributes): String
         +revisorDashboard(Model): String
         +revisorDetailArticle(Long, Model): String
@@ -32,5 +32,5 @@
         }
     </style>
     footer \n[[https://github.com/talsma-ict/umldoclet UMLDoclet 2.2.1]]
-    ' Generated 2025-08-29T10:32:38.151325414+02:00[Europe/Rome]
+    ' Generated 2025-08-29T16:57:39.092615740+02:00[Europe/Rome]
 @enduml

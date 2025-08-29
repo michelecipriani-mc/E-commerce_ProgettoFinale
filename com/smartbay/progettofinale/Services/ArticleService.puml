@@ -12,11 +12,11 @@
     hide empty methods
 
     class "<size:14>ArticleService\n<size:10>com.smartbay.progettofinale.Services" as com.smartbay.progettofinale.Services.ArticleService [[ArticleService.html]] {
-        +create(Article, Principal, MultipartFile): ArticleDTO
+        +create(Article, Principal, MultipartFile[]): ArticleDTO
         +delete(Long): void
         +read(Long): ArticleDTO
         +readAll(): List<ArticleDTO>
-        +update(Long, Article, MultipartFile): ArticleDTO
+        +update(Long, Article, MultipartFile[]): ArticleDTO
         +searchByCategory(Category): List<ArticleDTO>
         +searchByUser(User): List<ArticleDTO>
         +setIsAccepted(Boolean, Long): void
@@ -27,8 +27,8 @@
     interface "<size:14>CrudService\n<size:10>com.smartbay.progettofinale.Services" as com.smartbay.progettofinale.Services.CrudService<ArticleDTO, Article, Long> [[CrudService.html]] {
         {abstract} +readAll(): List<ReadDto>
         {abstract} +read(Long): ArticleDTO
-        {abstract} +create(Article, Principal, MultipartFile): ArticleDTO
-        {abstract} +update(Long, Article, MultipartFile): ArticleDTO
+        {abstract} +create(Article, Principal, MultipartFile[]): ArticleDTO
+        {abstract} +update(Long, Article, MultipartFile[]): ArticleDTO
         {abstract} +delete(Long): void
     }
 
@@ -41,5 +41,5 @@
         }
     </style>
     footer \n[[https://github.com/talsma-ict/umldoclet UMLDoclet 2.2.1]]
-    ' Generated 2025-08-29T10:32:38.651355572+02:00[Europe/Rome]
+    ' Generated 2025-08-29T16:57:39.569590973+02:00[Europe/Rome]
 @enduml

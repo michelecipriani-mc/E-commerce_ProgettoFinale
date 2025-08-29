@@ -14,8 +14,8 @@
     interface "<size:14>CrudService\n<size:10>com.smartbay.progettofinale.Services" as com.smartbay.progettofinale.Services.CrudService<ReadDto, Model, Key> [[CrudService.html]] {
         {abstract} +readAll(): List<ReadDto>
         {abstract} +read(Key): ReadDto
-        {abstract} +create(Model, Principal, MultipartFile): ReadDto
-        {abstract} +update(Key, Model, MultipartFile): ReadDto
+        {abstract} +create(Model, Principal, MultipartFile[]): ReadDto
+        {abstract} +update(Key, Model, MultipartFile[]): ReadDto
         {abstract} +delete(Key): void
     }
 
@@ -26,5 +26,5 @@
         }
     </style>
     footer \n[[https://github.com/talsma-ict/umldoclet UMLDoclet 2.2.1]]
-    ' Generated 2025-08-29T10:32:38.783477003+02:00[Europe/Rome]
+    ' Generated 2025-08-29T16:57:39.721102107+02:00[Europe/Rome]
 @enduml
