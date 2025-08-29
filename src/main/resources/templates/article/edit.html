@@ -75,12 +75,12 @@
                         </div>
 
                         <!-- Last image -->
-                        <div class="mb-3 d-flex flex-column">
+                        <div class="mb-3 d-flex flex-column w-100">
                             <label for="image" class="form-label text-white">Images</label>
                             <th:block th:if="${article.images != null and !article.images.isEmpty()}">
-                                <div th:each="img, iterStat : ${article.images}"
+                                <div class="d-flex my-1 w-25 justify-content-center align-items-center" th:each="img, iterStat : ${article.images}"
                                     th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
-                                    <img th:src="@{${img.path}}" class="d-block w-100 imgCard" alt="article image">
+                                    <img th:src="@{${img.path}}" class="imgCardEdit" alt="article image">
                                 </div>
                             </th:block>
                             <th:block th:unless="${article.images != null and !article.images.isEmpty()}">
@@ -107,7 +107,7 @@
     <!-- FOOTER -->
 
     <head th:insert="~{index :: footer}"></head>
-    <script th:insert="~{index :: bootstrapScript}"></script>
+    <script th:replace="~{index :: bootstrapScript}"></script>
 </body>
 
 </html>
