@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * DTO per rappresentare le informazioni personali complete dell'utente attualmente autenticato.
- * 
+ * <p>
  * Contiene dati sensibili come il saldo, ed è pensato esclusivamente per l'accesso dell'utente
  * stesso (es. nella pagina dashboard).
  */
