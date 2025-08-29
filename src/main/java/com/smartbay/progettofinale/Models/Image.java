@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(name = "images")
 public class Image {
-
+    //attributi della classe Image
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,8 +25,8 @@ public class Image {
 
     /**
      * Articolo associato all'immagine.
-     */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    */
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 }

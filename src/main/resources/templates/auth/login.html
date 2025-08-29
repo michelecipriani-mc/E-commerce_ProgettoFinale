@@ -4,11 +4,12 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
-
+    <!-- NAVBAR -->
     <head th:insert="~{index :: navbar}"></head>
 
     <div class="container intest">
         <div class="row align-items-center">
+            <!-- SEZIONE MESSAGGI DI ERRORE E LOGOUT -->
             <div class="col-12">
                 <div th:if="${param.error}">
                     <div class="alert alert-danger errorMessageLR">
@@ -21,20 +22,26 @@
                     </div>
                 </div>
             </div>
+            <!-- LOGIN FORM -->
             <div class="col-12 min-vh-100 d-flex flex-column justify-content-center align-items-center">
                 <h1 class="mb-5">Login</h1>
                 <div class="form-container">
                     <p class="title">Welcome back</p>
                     <form class="form" method="post" role="form" th:action="@{/login}">
+                        <!-- email -->
                         <input type="email" class="input form-control" id="username" name="username"
                             placeholder="Email">
+                        <!-- password -->
                         <input type="password" class="form-control input" id="password" name="password"
                             placeholder="Enter Password">
+                        <!-- login button -->
                         <button type="submit" class="btn btn-secondary mb-3 form-btn">Log in</button>
                     </form>
+                    <!-- collegamento alla pagina register -->
                     <p class="sign-up-label">
                         Don't have an account?<a th:href="@{/register}"> Register</a>
                     </p>
+                    <!-- loggin con Apple -->
                     <div class="buttons-container">
                         <div class="apple-login-button">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" class="apple-icon"
@@ -45,6 +52,7 @@
                             </svg>
                             <span>Log in with Apple</span>
                         </div>
+                        <!-- loggin con google -->
                         <div class="google-login-button">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" x="0px"
                                 y="0px" class="google-icon" viewBox="0 0 48 48" height="1em" width="1em"
@@ -67,7 +75,7 @@
             </div>
         </div>
     </div>
-
+    <!-- FOOTER -->
     <head th:insert="~{index :: footer}"></head>
     <script th:insert="~{index :: bootstrapScript}"></script>
 </body>

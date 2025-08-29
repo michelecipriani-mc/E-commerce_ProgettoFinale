@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrdineService {
-
+    // inserimento di tutte le DI
     private final CarrelloService carrelloService;
     private final ArticleRepository articleRepository;
     private final OrdineRepository ordineRepository;
@@ -32,8 +32,10 @@ public class OrdineService {
     private final SecurityService securityService;
     private final ModelMapper modelMapper;
 
+    // costruttore
     public OrdineService(CarrelloService carrelloService, ArticleRepository articleRepository,
-                         OrdineRepository ordineRepository, UserRepository userRepository, SecurityService securityService, ModelMapper modelMapper) {
+            OrdineRepository ordineRepository, UserRepository userRepository, SecurityService securityService,
+            ModelMapper modelMapper) {
         this.carrelloService = carrelloService;
         this.articleRepository = articleRepository;
         this.ordineRepository = ordineRepository;
@@ -42,81 +44,91 @@ public class OrdineService {
         this.modelMapper = modelMapper;
     }
 
-    //METODO CREA ORDINE AGGIORNATO CON SCALO DALLA BALANCE
+    // METODO CREA ORDINE AGGIORNATO CON SCALO DALLA BALANCE
     @Transactional
     public OrdineDTO creaOrdine() {
 
-    // Obtain instance of active user
-    User userInstance = securityService.getActiveUser();
+        // Ottieni l'istanza dell'utente attivo
+        User userInstance = securityService.getActiveUser();
+        //controllo se l'istanza dell'utente è = null
+        if (userInstance == null) {
+            throw new IllegalStateException("Unauthenticated users cannot place orders.");
+        }
 
-    if (userInstance == null) {
-        throw new IllegalStateException("Unauthenticated users cannot place orders.");
+        // Ottieni un oggetto utente gestito da JPA per la persistenza
+        User user = userRepository.findById(userInstance.getId())
+                .orElseThrow(() -> new IllegalArgumentException("No user by this id."));
+        //costruisco il carrello per utente
+        Carrello carrello = carrelloService.getCarrelloFromUtente(user.getId());
+        //messaggio se il careelo è vuoto
+        if (carrello.getArticles().isEmpty()) {
+            throw new RuntimeException("Il carrello è vuoto");
+        }
+        //inizializzo una variabile totale che conterrà il prezzo totale del carrello
+        BigDecimal totale = carrello.getPrezzoTotale(articleRepository);
+        //verifico che l'utente abbia il saldo necessario per poter concludere l'ordine
+        if (user.getBalance() == null || user.getBalance().compareTo(totale) < 0) {
+            throw new RuntimeException("Saldo insufficiente per completare l'ordine");
+        }
+        //creo l'ordine 
+        Ordine ordine = new Ordine();
+        //vado a settare:
+        ordine.setUser(user); //Utente
+        ordine.setDataOrdine(LocalDateTime.now()); //data ordine
+        ordine.setTotale(totale); //trotale prezzo
+        //successivamente vadoa recuperare tutti gli articoli presenti nel carrello
+        List<ArticoloOrdine> articoli = carrello.getArticles().entrySet().stream()
+                //effettuo un amappatura
+                .map(entry -> {
+                    //associo:
+                    Long idArticolo = entry.getKey(); //id dell'articolo
+                    Integer quantita = entry.getValue(); //quantità
+                    Article articolo = articleRepository.findById(idArticolo)
+                            .orElseThrow(() -> new RuntimeException("Articolo non trovato")); //l'articolo andandolo a cercare tramite id, se non trovato mi ritornerà articolo non trovato.
+
+                    //creo l'articolo ordine
+                    ArticoloOrdine voce = new ArticoloOrdine();
+                    //vado a settare:
+                    voce.setArticoloId(idArticolo); //ID
+                    voce.setTitoloArticolo(articolo.getTitle()); //Titolo
+                    voce.setQuantita(quantita); //Quantità
+                    voce.setPrezzoSingolo(articolo.getPrice()); //Prezzo
+                    voce.setOrdine(ordine); //Ordine
+                    //ritorno l'oggetto settato
+                    return voce;
+                })
+                //trasformo tutta la mappatura in una lista 
+                .collect(Collectors.toList());
+        //ora posso settare l'ordine con tutti gli articoli recuperati dal carrello e inseriti nella lista di ArticoloOrdine -> articoli
+        ordine.setArticoli(articoli);
+
+        // qui scala il saldo
+        BigDecimal nuovoSaldo = user.getBalance().subtract(totale);
+        user.setBalance(nuovoSaldo);
+
+        // poi salva ordine e utente (per aggiornare la balance)
+        Ordine ordineAggiornato = ordineRepository.save(ordine);
+        userRepository.save(user);
+
+        // svuota il carrello
+        carrelloService.svuotaCarrello(user.getId());
+        //ritorna l'entità aggiornata
+        return EntityToDTO(ordineAggiornato);
     }
-
-    // Obtain a user object manged by JPA for persistence
-    User user = userRepository.findById(userInstance.getId())
-            .orElseThrow(() -> new IllegalArgumentException("No user by this id."));
-    
-    Carrello carrello = carrelloService.getCarrelloFromUtente(user.getId());
-
-    if (carrello.getArticles().isEmpty()) {
-        throw new RuntimeException("Il carrello è vuoto");
-    }
-
-    BigDecimal totale = carrello.getPrezzoTotale(articleRepository);
-
-    if (user.getBalance() == null || user.getBalance().compareTo(totale) < 0) {
-        throw new RuntimeException("Saldo insufficiente per completare l'ordine");
-    }
-
-    Ordine ordine = new Ordine();
-    ordine.setUser(user);
-    ordine.setDataOrdine(LocalDateTime.now());
-    ordine.setTotale(totale);
-
-    List<ArticoloOrdine> articoli = carrello.getArticles().entrySet().stream()
-        .map(entry -> {
-            Long idArticolo = entry.getKey();
-            Integer quantita = entry.getValue();
-            Article articolo = articleRepository.findById(idArticolo)
-                .orElseThrow(() -> new RuntimeException("Articolo non trovato"));
-
-            ArticoloOrdine voce = new ArticoloOrdine();
-            voce.setArticoloId(idArticolo);
-            voce.setTitoloArticolo(articolo.getTitle());
-            voce.setQuantita(quantita);
-            voce.setPrezzoSingolo(articolo.getPrice());
-            voce.setOrdine(ordine);
-            return voce;
-        })
-        .collect(Collectors.toList());
-
-    ordine.setArticoli(articoli);
-
-    // qui scala il saldo
-    BigDecimal nuovoSaldo = user.getBalance().subtract(totale);
-    user.setBalance(nuovoSaldo);
-
-    // poi salva ordine e utente (per aggiornare la balance)
-    Ordine ordineAggiornato = ordineRepository.save(ordine);
-    userRepository.save(user);
-
-    // svuota il carrello
-    carrelloService.svuotaCarrello(user.getId());
-
-    return EntityToDTO(ordineAggiornato);
-}
 
     public List<OrdineDTO> getOrdiniUtente() {
+        // Recuperiamo l'utente attualmente autenticato tramite il servizio di sicurezza
         User user = securityService.getActiveUser();
-
+        //recuperiamo tutti gli ordini associati a questo utente
         return ordineRepository.findByUserOrderByDataOrdineDesc(user).stream()
-            .map(this::EntityToDTO)
-            .collect(Collectors.toList());
+                //mappiamo il tutto in un entità DTO
+                .map(this::EntityToDTO)
+                // Collezioniamo il risultato in una lista
+                .collect(Collectors.toList());
     }
 
-
     public OrdineDTO EntityToDTO(Ordine ordine) {
+        //se l'ordine è 0 null ritorniamo null
         if (ordine == null) {
             return null;
         }
@@ -126,20 +138,20 @@ public class OrdineService {
 
         // Mappatura manuale della lista articoli
         dto.setArticoli(ordine.getArticoli().stream()
-            .map(articoloOrdine -> {
-                
-                // Inserimento Titolo, Prezzo, Quantità per storico ordini della dashboard
-                ArticleDTO articoloDTO = new ArticleDTO();
+                .map(articoloOrdine -> {
 
-                articoloDTO.setTitle(articoloOrdine.getTitoloArticolo());
-                articoloDTO.setPrice(articoloOrdine.getPrezzoSingolo());
-
-                return new ArticoloQuantitaDTO(articoloDTO, articoloOrdine.getQuantita());
-            })
-            .collect(Collectors.toList()));
-
+                    // Inserimento Titolo, Prezzo, Quantità per storico ordini della dashboard
+                    ArticleDTO articoloDTO = new ArticleDTO();
+                    //vado a settare:
+                    articoloDTO.setTitle(articoloOrdine.getTitoloArticolo()); //Titolo
+                    articoloDTO.setPrice(articoloOrdine.getPrezzoSingolo()); //Prezzo
+                    
+                    //ritorno il nuovo ArticoloQuantitaDTO
+                    return new ArticoloQuantitaDTO(articoloDTO, articoloOrdine.getQuantita());
+                })
+                //trasformo il tutto in una lista
+                .collect(Collectors.toList()));
+        //ritorno tutto il l'OrdineDTO chiamato dto
         return dto;
     }
 }
-
-

@@ -4,16 +4,16 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
-
+    <!-- Navbar component -->
     <head th:insert="~{index :: navbar}"></head>
-
+    <!-- Messaggi di successo e errore per funzionalità -->
     <div class="min-vh-100">
         <div th:if="${successMessage}">
             <div class="alert alert-success errorMessage">
                 <p th:text="${successMessage}"></p>
             </div>
         </div>
-
+        <!-- DASHBOARD -->
         <div class="container-fluid intest">
             <div class="row ms-5 me-5 align-items-center">
                 <div class="col-12 d-flex justify-content-center align-items-center my-3">
@@ -23,6 +23,7 @@
                     <h1 th:text="${title}">Your Articles</h1>
                 </div>
                 <div class="col-12">
+                    <!-- Tabella con articoli pubblicati -->
                     <table class="table table-striped table-responsive-lg">
                         <thead>
                             <tr>
@@ -58,7 +59,7 @@
             </div>
         </div>
     </div>
-
+    <!-- FOOTER -->
     <head th:insert="~{index :: footer}"></head>
     <script th:insert="~{index :: bootstrapScript}"></script>
 </body>

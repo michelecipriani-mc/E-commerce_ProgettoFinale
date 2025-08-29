@@ -4,9 +4,9 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
-
+    <!-- NAVBAR -->
     <head th:insert="~{index :: navbar}"></head>
-
+    <!-- RICHIESTA LAVORA CON NOI(RUOLO) -->
     <div class="min-vh-100 intest">
         <div class="container">
             <div class="row">
@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- FORM DI RICHIESTA -->
         <div class="container">
             <div class="row mb-5 justify-content-center">
                 <div class="col-12">
@@ -33,7 +33,7 @@
                                 <option th:each="role:${roles}" th:value="${role.id}" th:text="${#strings.substring(role.name, 5)}"></option>
                             </select>
                         </div>
-
+                        <!-- Button di invio richiesta -->
                         <div class="mb-3">
                             <button type="submit" class="btn btn-success">Submit Request</button>
                         </div>
@@ -42,7 +42,7 @@
             </div>
         </div>
     </div>
-
+    <!-- FOOTER -->
     <head th:insert="~{index :: footer}"></head>
     <script th:insert="~{index :: bootstrapScript}"></script>
 </body>

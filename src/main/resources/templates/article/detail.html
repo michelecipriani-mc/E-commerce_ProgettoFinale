@@ -11,7 +11,7 @@
     <header th:insert="~{index :: navbar}"></header>
 
     <div class="min-vh-100">
-
+        <!-- SEZIONE MESSAGGI DI ERRORE -->
         <div th:if="${cartSuccess != null and cartWarning == null}">
             <div class="alert alert-success errorMessage mt-3">
                 <p th:text="${cartSuccess}"></p>
@@ -23,7 +23,7 @@
                 <p th:text="${cartWarning}"></p>
             </div>
         </div>
-
+        <!-- DETTAGLIO ARTICOLO -->
         <div class="container-fluid intest">
             <div class="row ms-5 align-items-center">
                 <div class="col-12 d-flex justify-content-center align-items-center my-3">
@@ -35,21 +35,29 @@
         <div class="container">
             <div class="row mb-5 justify-content-center">
                 <div class="col-12 col-md-8 d-flex flex-column">
-                    <div id="carouselExample" class="carousel slide">
+                    <!-- CAROUSEL IMMAGINI -->
+                    <div th:id="'carousel-' + ${article.id}" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img th:if="${article.image != null}" th:src="${article.image.path}"
-                                    class="d-block w-100" alt="article img">
-                                <img th:unless="${article.image != null}" th:src="@{/images/default.png}"
-                                    class="d-block w-100" alt="article default img">
+                            <div th:if="${article.images != null and !article.images.isEmpty()}">
+                                <div th:each="img, iterStat : ${article.images}"
+                                    th:class="'carousel-item' + (${iterStat.index} == 0 ? ' active' : '')">
+                                    <img th:src="@{${img.path}}" class="d-block w-100 imgCard" alt="article image">
+                                </div>
                             </div>
+                            <th:block th:unless="${article.images != null and !article.images.isEmpty()}">
+                                <div class="carousel-item active">
+                                    <img th:src="@{/images/default.png}" class="d-block w-100"
+                                        alt="default article image">
+                                </div>
+                            </th:block>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+
+                        <button class="carousel-control-prev" type="button" th:data-bs-target="'#carousel-' + ${article.id}"
                             data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                        <button class="carousel-control-next" type="button" th:data-bs-target="'#carousel-' + ${article.id}"
                             data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
@@ -57,6 +65,7 @@
                     </div>
                 </div>
                 <div class="col-12">
+                    <!-- DATI DELL'ARTICOLO -->
                     <div class="d-flex flex-column justify-content-center align-items-center">
                         <h2 th:text="${article.title}">Title</h2>
                         <h3 th:text="${article.subtitle}">Subtitle</h3>
@@ -75,7 +84,7 @@
                                 <p th:text="${article.user.username}">User</p>
                             </a>
                         </div>
-                        
+
                         <div class="d-flex text-muted justify-content-center w-100 fs-5">
                             Price:
                             <p class="ms-2 fs-5" th:text="${article.price}"></p><span class="fs-5">€</span>
@@ -86,7 +95,7 @@
                     <p th:text="${article.body}">Body text</p>
                     <hr>
 
-                    <!-- Add to Cart Form -->
+                    <!-- FORM DI AGGIUNTA AL CARRELLO -->
                     <div class="text-center my-4">
                         <form th:action="@{/carrello/dropdownadd/{id}(id=${article.id})}" method="post">
                             <input type="hidden" name="id" th:value="${article.id}" />
@@ -119,7 +128,7 @@
 
     <!-- FOOTER -->
     <footer th:insert="~{index :: footer}" class="smartbay-footer mt-5"></footer>
-    <script th:insert="~{index :: bootstrapScript}"></script>
+    <script th:replace="~{index :: bootstrapScript}"></script>
 
     <script>
         function goBack() {

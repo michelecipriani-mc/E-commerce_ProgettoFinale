@@ -4,9 +4,9 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
-
+    <!-- NAVBAR -->
     <head th:insert="~{index :: navbar}"></head>
-
+    <!-- DETTAGLIO RICHIESTA -->
     <div class="min-vh-100 intest">
         <div class="container">
             <div class="row">
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- DATI RICHIEDENTE -->
         <div class="container-fluid my-5">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 d-flex flex-column">
@@ -30,7 +30,7 @@
                     <div>
                         <h2 th:text="${request.body}">Body</h2>
                     </div>
-
+                    <!-- BUTTON PER ACCETTARE LA RICHIESTA -->
                     <div class="d-flex">
                         <form th:action="@{/operations/career/request/accept/{id}(id=${request.id})}" method="post">
                             <button type="submit" class="btn btn-success m-2">Accept</button>

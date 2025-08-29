@@ -4,10 +4,11 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
-
+    <!-- NAVBAR -->
     <head th:insert="~{index :: navbar}"></head>
-
+        <!-- DETTAGLIO ARTICOLO DA REVISIONARE -->
         <div class="container-fluid intest">
+            <!-- SEZIONE TITOLO -->
             <div class="row align-items-center">
                 <div class="col-12 d-flex flex-column justify-content-center align-items-center my-3">
                     <h1 class="h1">Article: </h1>
@@ -15,29 +16,40 @@
                 </div>
             </div>
         </div>
-
+        <!-- CORPO DELL'ARTICOLO -->
         <div class="container my-5">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 d-flex flex-column">
-                    <div id="carouselExample" class="carousel slide">
+                    <!-- SEZIONE CAROUSEL PER LE IMMAGINI -->
+                    <div th:id="'carousel-' + ${article.id}" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top d-block w-100" alt="article img">
-                                <img th:unless="${article.image != null}" th:src="@{/images/default.png}" class="card-img-top d-block w-100" alt="article default img">
+                            <div th:if="${article.images != null and !article.images.isEmpty()}">
+                                <div th:each="img, iterStat : ${article.images}"
+                                    th:class="'carousel-item' + (${iterStat.index} == 0 ? ' active' : '')">
+                                    <img th:src="@{${img.path}}" class="d-block w-100 imgCard" alt="article image">
+                                </div>
                             </div>
+                            <th:block th:unless="${article.images != null and !article.images.isEmpty()}">
+                                <div class="carousel-item active">
+                                    <img th:src="@{/images/default.png}" class="d-block w-100"
+                                        alt="default article image">
+                                </div>
+                            </th:block>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+
+                        <button class="carousel-control-prev" type="button" th:data-bs-target="'#carousel-' + ${article.id}"
                             data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                        <button class="carousel-control-next" type="button" th:data-bs-target="'#carousel-' + ${article.id}"
                             data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
                     </div>
                 </div>
+                <!-- DATI: sottotitolo, autore, prezzo, data di pubblicazione -->
                 <div class="col-12">            
                     <div class="d-flex flex-column justify-content-center align-items-center">
                         <h3 th:text="${article.subtitle}">Subtitle</h3>
@@ -56,6 +68,7 @@
                     <hr>
                     <p th:text="${article.body}"></p>
                     <hr>
+                    <!-- SEZIONE ACCETTA O RIFIUTA -->
                     <div class="d-flex justify-content-between">
                         <form th:action="@{/articles/accept(action='accept', articleId=${article.id})}" method="post">
                             <button type="submit" class="btn btn-success m-2">
@@ -74,10 +87,10 @@
                 </div>
             </div>
         </div>
-
+    <!-- FOOTER -->
     <head th:insert="~{index :: footer}"></head>
-    <script th:insert="~{index :: bootstrapScript}"></script>
-    
+    <script th:replace="~{index :: bootstrapScript}"></script>
+    <!-- JS PER IL GO BACK ALLA PAGINA PRECEDENTE -->
     <script>
         function goBack() {
             window.history.back();

@@ -12,16 +12,19 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @SpringBootApplication
 public class ProgettofinaleApplication {
-
+	
 	public static void main(String[] args) {
+		// Avvia l'applicazione Spring Boot
 		SpringApplication.run(ProgettofinaleApplication.class, args);
 	}
 
+	// BCryptPasswordEncoder implementa un algoritmo di hashing sicuro
 	@Bean
 	public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+	// ModelMapper semplifica il mapping tra oggetti con campi simili
 	@Bean
 	public ModelMapper instanceModelMapper() {
 		ModelMapper mapper = new ModelMapper();

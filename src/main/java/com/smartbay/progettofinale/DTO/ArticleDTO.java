@@ -2,6 +2,8 @@ package com.smartbay.progettofinale.DTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.smartbay.progettofinale.Models.Category;
 import com.smartbay.progettofinale.Models.Image;
@@ -11,20 +13,62 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object per l'entità Article.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 public class ArticleDTO {
 
+    /**
+     * Identificativo univoco dell'articolo.
+     */
     private Long id;
+
+    /**
+     * Prezzo dell'articolo.
+     */
     private BigDecimal price;
+
+    /**
+     * Titolo dell'articolo.
+     */
     private String title;
+
+    /**
+     * Sottotitolo dell'articolo.
+     */
     private String subtitle;
+
+    /**
+     * Corpo del testo dell'articolo.
+     */
     private String body;
+
+    /**
+     * Data di pubblicazione dell'articolo.
+     */
     private LocalDate publishDate;
+
+    /**
+     * Stato di approvazione dell'articolo (true, false o null).
+     */
     private Boolean isAccepted;
+
+    /**
+     * L'utente autore dell'articolo.
+     */
     private User user;
+
+    /**
+     * La categoria a cui appartiene l'articolo.
+     */
     private Category category;
-    private Image image;
+
+    /**
+     * L'immagine associata all'articolo.
+     */
+    private List<Image> images = new ArrayList<>();
 
 }

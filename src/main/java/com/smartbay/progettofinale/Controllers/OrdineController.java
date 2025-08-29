@@ -18,15 +18,16 @@ import com.smartbay.progettofinale.Services.OrdineService;
 @RestController
 @RequestMapping("/ordini")
 public class OrdineController {
-
+    //inserimento di tutte le DI
     private final OrdineService ordineService;
-
+    //costruttore
     public OrdineController(OrdineService ordineService, SecurityService securityService) {
         this.ordineService = ordineService;
     }
-
+    //conferma dell'ordine
     @PostMapping("/conferma")
     public ModelAndView confermaOrdine(RedirectAttributes redirectAttributes) {
+        /*gestiamo con un try-catch la conferma dell'ordine, dove andiamo a creare l'effetivo ordine richiamando ordineService.creaOrdine() e se tutto avviene correttamente inoltriamo un messaggio di successo, altrimenti inoltriamo un messaggio di warning */
         try {
             ordineService.creaOrdine();
             redirectAttributes.addFlashAttribute("cartSuccess", "Ordine effettuato con successo.");
@@ -35,7 +36,8 @@ public class OrdineController {
         }
         return new ModelAndView("redirect:/carrello");
     }
-
+    // Recuperiamo la lista degli ordini dell'utente dal service 
+    // e la restituiamo al client in una ResponseEntity con stato HTTP 200 (OK)
     @GetMapping("")
     public ResponseEntity<List<OrdineDTO>> getOrdiniUtente() {
         return ResponseEntity.ok(ordineService.getOrdiniUtente());
