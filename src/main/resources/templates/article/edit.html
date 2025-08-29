@@ -5,6 +5,7 @@
 
 <body>
     <!-- NAVBAR -->
+
     <head th:insert="~{index :: navbar}"></head>
     <!-- FORM DI MODIFICA ARTICOLO -->
     <div class="container-fluid intest min-vh-100 mb-5">
@@ -46,8 +47,8 @@
                         <!-- Publishing Date input -->
                         <div class="mb-3">
                             <label for="date" class="form-label text-white">Publish Date</label>
-                            <input type="date" class="form-control input2" id="date" placeholder="(8 char max) YYYY/MM/GG"
-                                th:field="*{publishDate}" />
+                            <input type="date" class="form-control input2" id="date"
+                                placeholder="(8 char max) YYYY/MM/GG" th:field="*{publishDate}" />
                             <p th:errors="*{publishDate}" class="text-danger"
                                 th:if="${#fields.hasErrors('publishDate')}">
                             </p>
@@ -56,8 +57,8 @@
                         <!-- Price input -->
                         <div class="mb-3">
                             <label for="price" class="form-label text-white">Price</label>
-                            <input type="number" class="form-control input2" id="price" placeholder="Enter the price in EUR"
-                                th:field="*{price}" step="1" min="1" max="1000" />
+                            <input type="number" class="form-control input2" id="price"
+                                placeholder="Enter the price in EUR" th:field="*{price}" step="1" min="1" max="1000" />
                             <p th:errors="*{price}" class="text-danger" th:if="${#fields.hasErrors('price')}"></p>
                         </div>
 
@@ -74,19 +75,26 @@
                         </div>
 
                         <!-- Last image -->
-                        <div class="mb-3 d-flex flex-column" th:if="${article.image != null}">
-                            <label for="image" class="form-label text-white">Image</label>
-                            <img th:src="${article.image.path}" id="image" alt="${article.image.path}">
-                        </div>
-                        <div th:unless="${article.image != null}">
-                            <label for="image" class="form-label text-white">Image</label>
-                            <p>Image not found</p>
+                        <div class="mb-3 d-flex flex-column">
+                            <label for="image" class="form-label text-white">Images</label>
+                            <th:block th:if="${article.images != null and !article.images.isEmpty()}">
+                                <div th:each="img, iterStat : ${article.images}"
+                                    th:classappend="${iterStat.index == 0} ? 'carousel-item active' : 'carousel-item'">
+                                    <img th:src="@{${img.path}}" class="d-block w-100 imgCard" alt="article image">
+                                </div>
+                            </th:block>
+                            <th:block th:unless="${article.images != null and !article.images.isEmpty()}">
+                                <div class="carousel-item active">
+                                    <img th:src="@{/images/default.png}" class="d-block w-100"
+                                        alt="default article image">
+                                </div>
+                            </th:block>
                         </div>
 
                         <!-- Image edit -->
                         <div class="mb-3">
                             <label for="image" class="form-label text-white">Image</label>
-                            <input type="file" name="file" id="image" class="form-control" multiple>
+                            <input type="file" name="files" id="image" class="form-control" multiple>
                         </div>
                         <div class="mb-3">
                             <button type="submit" class="btn mb-3 form-btn2 w-100">Edit Article</button>
@@ -97,6 +105,7 @@
         </div>
     </div>
     <!-- FOOTER -->
+
     <head th:insert="~{index :: footer}"></head>
     <script th:insert="~{index :: bootstrapScript}"></script>
 </body>

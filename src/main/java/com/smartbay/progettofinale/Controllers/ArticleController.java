@@ -132,7 +132,7 @@ public class ArticleController {
                             BindingResult result,
                             RedirectAttributes redirectAttributes,
                             Principal principal,
-                            @RequestParam("file") MultipartFile file,
+                            @RequestParam(value = "files", required = false) MultipartFile[] files,
                             Model viewModel) {
         if (result.hasErrors()) {
             viewModel.addAttribute("title", "Create an Article");
@@ -143,7 +143,7 @@ public class ArticleController {
 
         // Impostazione stato articolo in attesa di revisione
         article.setIsAccepted(null);
-        articleService.create(article, principal, file); // logica immagine gestita nel service
+        articleService.create(article, principal, files); // logica immagine gestita nel service
         redirectAttributes.addFlashAttribute("successMessage", "Article added and awaiting review");
 
         return "redirect:/";
@@ -204,11 +204,11 @@ public class ArticleController {
                                 BindingResult result,
                                 RedirectAttributes redirectAttributes,
                                 Principal principal,
-                                @RequestParam("file") MultipartFile file,
+                                @RequestParam(value = "files", required = false) MultipartFile[] files,
                                 Model viewModel) {
         if (result.hasErrors()) {
             viewModel.addAttribute("title", "Article update");
-            article.setImage(articleService.read(id).getImage());
+            article.setImages(articleService.read(id).getImages());
             viewModel.addAttribute("article", article);
             viewModel.addAttribute("categories", categoryService.readAll());
             return "article/edit";
@@ -227,7 +227,7 @@ public class ArticleController {
             redirectAttributes.addFlashAttribute("successMessage", "Article successfully edited!");
         }
 
-        articleService.update(id, article, file); // file gestito nel service
+        articleService.update(id, article, files); // file gestito nel service
         return "redirect:/seller/dashboard";
     }
 

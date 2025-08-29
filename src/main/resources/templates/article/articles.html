@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+
     <head th:insert="~{index :: head}"></head>
 
     <style>
@@ -17,7 +19,7 @@
             pointer-events: none;
             /* Allows clicks to go "through" the container */
         }
-    
+
         /* Base styles for any notification */
         .toast-notification {
             pointer-events: auto;
@@ -30,35 +32,35 @@
             animation-fill-mode: forwards;
             /* Keeps the final state of the animation */
         }
-    
+
         /* Define animation durations based on success or error */
         .toast-success {
             animation-duration: 3s;
         }
-    
+
         .toast-error {
             animation-duration: 5s;
         }
-    
+
         /* The animation keyframes */
         @keyframes toast-animation {
             0% {
                 opacity: 0;
                 transform: translateY(20px);
             }
-    
+
             10% {
                 /* Fade in */
                 opacity: 1;
                 transform: translateY(0);
             }
-    
+
             90% {
                 /* Stay visible */
                 opacity: 1;
                 transform: translateY(0);
             }
-    
+
             100% {
                 /* Fade out and move up */
                 opacity: 0;
@@ -70,6 +72,7 @@
 
 <body>
     <!-- NAVBAR -->
+
     <head th:insert="~{index :: navbar}"></head>
 
     <div class="headerSmartBayArticle">
@@ -88,8 +91,13 @@
             <div class="row my-2 justify-content-center">
                 <div th:each="article:${articles}" class="col-12 col-md-4 d-flex justify-content-center my-5">
                     <div class="card" style="width: 18rem;">
-                        <img th:if="${article.image != null}" th:src="${article.image.path}"
-                            class="card-img-top imgCard" alt="article image">
+                        <th:block th:if="${article.images != null and !article.images.isEmpty()}">
+                            <img th:src="@{${article.images[0].path}}" class="card-img-top imgCard" alt="article image">
+                        </th:block>
+                        <th:block th:unless="${article.images != null and !article.images.isEmpty()}">
+                            <img th:src="@{/images/default.png}" class="card-img-top imgCard"
+                                alt="default article image">
+                        </th:block>
                         <div class="card-body bg-body-secondary d-flex flex-column">
                             <h5 class="card-title" th:text="${article.title}"></h5>
                             <p class="card-text" th:text="${article.user.username}"></p>
@@ -98,14 +106,15 @@
                             </div>
                             <div class="d-flex justify-content-end align-items-center">
                                 <!-- BUTTON PER IL DETTAGLIO -->
-                                <a th:href="@{/articles/detail/{id}(id=${article.id})}"
-                                    class="btn btn-secondary mx-1">
+                                <a th:href="@{/articles/detail/{id}(id=${article.id})}" class="btn btn-secondary mx-1">
                                     Show
                                 </a>
                                 <!-- AGGIUNGERE ARTICOLO AL CARRELLO -->
-                                <form th:attr="hx-post=@{/carrello/htmx-add/{id}(id=${article.id})}" hx-target="#cart-notification-container"
-                                    hx-swap="innerHTML" hx-trigger="submit" style="display:inline;">
-                                    <button type="submit" class="btn btn-success mx-1"><i class="fa-solid fa-cart-plus"></i></button>
+                                <form th:attr="hx-post=@{/carrello/htmx-add/{id}(id=${article.id})}"
+                                    hx-target="#cart-notification-container" hx-swap="innerHTML" hx-trigger="submit"
+                                    style="display:inline;">
+                                    <button type="submit" class="btn btn-success mx-1"><i
+                                            class="fa-solid fa-cart-plus"></i></button>
                                 </form>
                             </div>
                         </div>
@@ -123,6 +132,7 @@
         </div>
     </div>
     <!-- FOOTER -->
+
     <head th:insert="~{index :: footer}"></head>
     <!-- SCRIPT -->
     <div th:insert="~{index :: bootstrapScript}"></div>

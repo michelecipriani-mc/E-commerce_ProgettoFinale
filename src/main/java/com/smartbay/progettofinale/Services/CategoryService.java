@@ -37,7 +37,7 @@ public class CategoryService  implements CrudService<CategoryDTO, Category, Long
      * @return Il DTO della categoria creata.
      */
     @Override
-    public CategoryDTO create(Category model, Principal principal, MultipartFile file) {
+    public CategoryDTO create(Category model, Principal principal, MultipartFile[] file) {
         return modelMapper.map(categoryRepository.save(model), CategoryDTO.class);
     }
 
@@ -88,7 +88,7 @@ public class CategoryService  implements CrudService<CategoryDTO, Category, Long
      * @return Il DTO della categoria aggiornata.
      */
     @Override
-    public CategoryDTO update(Long key, Category model, MultipartFile file) {
+    public CategoryDTO update(Long key, Category model, MultipartFile[] file) {
         if (categoryRepository.existsById(key)) {
             model.setId(key);
             return modelMapper.map(categoryRepository.save(model), CategoryDTO.class);

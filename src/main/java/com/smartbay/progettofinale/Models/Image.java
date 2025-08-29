@@ -26,7 +26,7 @@ public class Image {
     /**
      * Articolo associato all'immagine.
     */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 }

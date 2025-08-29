@@ -2,6 +2,8 @@ package com.smartbay.progettofinale.Models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -78,7 +80,7 @@ public class Article {
     public Boolean getIsAccepted() {
         return isAccepted;
     }
-    
+
     /**
      * Imposta lo stato di approvazione dell'articolo.
      *
@@ -95,7 +97,7 @@ public class Article {
      */
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"articles"})
+    @JsonIgnoreProperties({ "articles" })
     private User user;
 
     /**
@@ -104,7 +106,7 @@ public class Article {
      * Relazione molti-a-uno: molti articoli possono avere una categoria.
      */
     @ManyToOne
-    @JsonIgnoreProperties({"articles"})
+    @JsonIgnoreProperties({ "articles" })
     private Category category;
 
     /**
@@ -112,9 +114,9 @@ public class Article {
      * <p>
      * Relazione uno-a-uno: un articolo può avere una sola immagine.
      */
-    @OneToOne(mappedBy = "article")
-    @JsonIgnoreProperties({"article"})
-    private Image image;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({ "article" })
+    private List<Image> images = new ArrayList<>();
 
     /**
      * Confronta se due oggetti Article sono uguali.
@@ -127,13 +129,34 @@ public class Article {
      */
     @Override
     public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
         Article article = (Article) obj;
-        if (title.equals(article.getTitle()) && subtitle.equals(article.getSubtitle()) &&
-            body.equals(article.getBody()) && publishDate.equals(article.getPublishDate()) &&
-            category.getName().equals(article.getCategory().getName()) && image.getPath().equals(article.getImage().getPath())) {
-            return true; 
+
+        if (!title.equals(article.getTitle()))
+            return false;
+        if (!subtitle.equals(article.getSubtitle()))
+            return false;
+        if (!body.equals(article.getBody()))
+            return false;
+        if (!publishDate.equals(article.getPublishDate()))
+            return false;
+        if (!category.getName().equals(article.getCategory().getName()))
+            return false;
+
+        // Confronta liste di immagini per path
+        if (images.size() != article.getImages().size())
+            return false;
+        for (int i = 0; i < images.size(); i++) {
+            if (!images.get(i).getPath().equals(article.getImages().get(i).getPath())) {
+                return false;
+            }
         }
-        return false;
+
+        return true;
     }
-    
+
 }

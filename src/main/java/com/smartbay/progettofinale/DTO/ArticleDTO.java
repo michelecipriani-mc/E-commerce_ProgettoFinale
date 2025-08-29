@@ -2,6 +2,8 @@ package com.smartbay.progettofinale.DTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.smartbay.progettofinale.Models.Category;
 import com.smartbay.progettofinale.Models.Image;
@@ -67,6 +69,6 @@ public class ArticleDTO {
     /**
      * L'immagine associata all'articolo.
      */
-    private Image image;
+    private List<Image> images = new ArrayList<>();
 
 }

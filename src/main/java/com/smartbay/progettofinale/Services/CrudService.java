@@ -38,7 +38,7 @@ public interface CrudService<ReadDto, Model, Key> {
      * @param file      Un file da associare all'elemento (opzionale).
      * @return Il DTO dell'elemento creato.
      */
-    ReadDto create(Model model, Principal principal, MultipartFile file);
+    ReadDto create(Model model, Principal principal, MultipartFile[] files);
 
     /**
      * Aggiorna un elemento esistente in base alla sua chiave primaria.
@@ -48,7 +48,7 @@ public interface CrudService<ReadDto, Model, Key> {
      * @param file  Un file da aggiornare (opzionale).
      * @return Il DTO dell'elemento aggiornato.
      */
-    ReadDto update(Key key, Model model, MultipartFile file);
+    ReadDto update(Key key, Model model, MultipartFile[] files);
 
     /**
      * Elimina un elemento in base alla sua chiave primaria.

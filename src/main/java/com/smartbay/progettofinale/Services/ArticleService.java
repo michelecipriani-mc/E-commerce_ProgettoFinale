@@ -1,5 +1,6 @@
 package com.smartbay.progettofinale.Services;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +16,12 @@ import org.springframework.web.server.ResponseStatusException;
 import com.smartbay.progettofinale.DTO.ArticleDTO;
 import com.smartbay.progettofinale.Models.Article;
 import com.smartbay.progettofinale.Models.Category;
+import com.smartbay.progettofinale.Models.Image;
 import com.smartbay.progettofinale.Models.User;
 import com.smartbay.progettofinale.Repositories.ArticleRepository;
 import com.smartbay.progettofinale.Repositories.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 /** Servizio per la gestione della logica di business relativa agli articoli. */
 @Service
@@ -49,7 +53,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
      * @return Il DTO dell'articolo creato.
      */
     @Override
-    public ArticleDTO create(Article article, Principal principal, MultipartFile file) {
+    public ArticleDTO create(Article article, Principal principal, MultipartFile[] files) {
 
         // Ottieni utente attivo
         if (principal != null) {
@@ -67,14 +71,18 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
 
         Article savedArticle = articleRepository.save(article); // salvo prima per avere ID
 
-        if (file != null && !file.isEmpty()) {
-            try {
-                String imagePath = imageService.saveImageOnDisk(file).get(); // salva su disco
-                imageService.saveImageOnDB(imagePath, savedArticle); // salva il path nel DB
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    try {
+                        String imagePath = imageService.saveImageOnDisk(file).get(); // salva su disco
+                        imageService.saveImageOnDB(imagePath, savedArticle); // salva il path nel DB
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to save image", e);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("Failed to save image", e);
+                    }
+                }
             }
         }
 
@@ -90,27 +98,25 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
      * @param id L'ID dell'articolo da eliminare.
      */
     @Override
+    @Transactional
     public void delete(Long key) {
 
         // Ottieni articolo da DB
         Article article = articleRepository.findById(key)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-
-        try {
-
-            // Disaccoppia immagine e articolo, elimina immagine
-            if (article.getImage() != null) {
-                String path = article.getImage().getPath();
-                article.getImage().setArticle(null); // disaccoppia
-                imageService.deleteImage(path);
+        // Se ci sono immagini associate
+        if (article.getImages() != null && !article.getImages().isEmpty()) {
+            for (Image img : article.getImages()) {
+                try {
+                    // Elimina il file fisico
+                    imageService.deleteImage(img.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
         // Elimina articolo
-        articleRepository.deleteById(key);
+        articleRepository.delete(article);
 
         // Rimuovi riferimento all'articolo da tutti i carrelli
         carrelloService.rimuoviArticoloDaTuttiICarrelli(key);
@@ -147,7 +153,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
      * @return Il DTO dell'articolo aggiornato.
      */
     @Override
-    public ArticleDTO update(Long key, Article updatedArticle, MultipartFile file) {
+    public ArticleDTO update(Long key, Article updatedArticle, MultipartFile[] files) {
 
         // Controlla se l'articolo esiste
         if (!articleRepository.existsById(key)) {
@@ -163,21 +169,26 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
 
         // Gestione immagine
         try {
-            if (file != null && !file.isEmpty()) {
-
+            if (files != null && files.length > 0) {
                 // Elimina immagine precedente se esiste
-                if (existingArticle.getImage() != null) {
-                    imageService.deleteImage(existingArticle.getImage().getPath());
+                if (existingArticle.getImages() != null) {
+                    for (Image img : existingArticle.getImages()) {
+                        imageService.deleteImage(img.getPath());
+
+                    }
                 }
-
-                // Salva nuova immagine
-                String newImagePath = imageService.saveImageOnDisk(file).get();
-                imageService.saveImageOnDB(newImagePath, updatedArticle);
-
-            } else if (existingArticle.getImage() != null) {
+                // foreach per salvare tutte le immagini
+                for (MultipartFile file : files) {
+                    if (!file.isEmpty()) {
+                        // Salva nuova immagine
+                        String newImagePath = imageService.saveImageOnDisk(file).get();
+                        imageService.saveImageOnDB(newImagePath, updatedArticle);
+                    }
+                }
+            } else if (existingArticle.getImages() != null) {
 
                 // Mantieni immagine esistente
-                updatedArticle.setImage(existingArticle.getImage());
+                updatedArticle.setImages(existingArticle.getImages());
 
             }
 
@@ -224,8 +235,9 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
     /**
      * Imposta lo stato di approvazione di un articolo.
      *
-     * @param result Lo stato di approvazione (true per approvato, false per non approvato).
-     * @param id L'ID dell'articolo.
+     * @param result Lo stato di approvazione (true per approvato, false per non
+     *               approvato).
+     * @param id     L'ID dell'articolo.
      */
     public void setIsAccepted(Boolean result, Long id) {
         Article article = articleRepository.findById(id).get();
