@@ -14,8 +14,6 @@
 -subpackages
 com.smartbay.progettofinale
 --create-puml-files
---uml-custom-directive='!pragma layout smetana'
---uml-excluded-package-dependencies=java,org.modelmapper,org.springframework,jakarta
 -author
 -bottom
 'Copyright &#169; 2025. All rights reserved.'
