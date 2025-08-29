@@ -1,0 +1,10 @@
+com.smartbay.progettofinale
+com.smartbay.progettofinale.Config
+com.smartbay.progettofinale.Controllers
+com.smartbay.progettofinale.DTO
+com.smartbay.progettofinale.Global
+com.smartbay.progettofinale.Models
+com.smartbay.progettofinale.Repositories
+com.smartbay.progettofinale.Security
+com.smartbay.progettofinale.Services
+com.smartbay.progettofinale.utils
