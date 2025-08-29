@@ -8,39 +8,44 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+//creazione della classe CustomUserDetail
 public class CustomUserDetails implements UserDetails{
-
+    //Attributi della classe
     private Long id;
     private String username;
     private String email;
     private String password;
+    // Collezione di ruoli/authorities dell'utente
     private Collection<? extends GrantedAuthority> authorities;
 
+    // I seguenti metodi determinano lo stato dell'account
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return true; // l'account non scade mai
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return true; // l'account non viene mai bloccato
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return true; // le credenziali non scadono mai
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return true; // l'account è sempre abilitato
     }
 
+    // Restituisce la collezione di ruoli/authorities dell'utente
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
 
+    //Getter e Setter
     @Override
     public String getPassword() {
         return password;

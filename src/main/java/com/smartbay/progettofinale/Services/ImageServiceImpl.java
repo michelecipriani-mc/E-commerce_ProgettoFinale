@@ -18,13 +18,14 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ImageServiceImpl implements ImageService {
-
+    //inserimento delle DI
     @Autowired
     private ImageRepository imageRepository;
 
     @Value("${image.upload.dir:src/main/resources/static/images}")
     private String uploadDir;
-
+    
+    //metodo per salvare l'immagine nel DB
     public void saveImageOnDB(String url, Article article) {
         imageRepository.save(Image.builder().path(url).article(article).build());
     }

@@ -12,9 +12,9 @@ import com.smartbay.progettofinale.Services.CustomUserDetails;
 
 @Service
 public class SecurityService {
-
+    //inserimento di tutte le DI
     private final UserRepository utenteRepository;
-
+    //costruttore
     public SecurityService(UserRepository utenteRepository) {
         this.utenteRepository = utenteRepository;
     }

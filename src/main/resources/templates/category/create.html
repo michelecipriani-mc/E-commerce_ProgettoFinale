@@ -4,9 +4,9 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
-
+    <!-- NAVBAE -->
     <head th:insert="~{index :: navbar}"></head>
-
+    <!-- CREAZIONE CATEGORIA -->
     <div class="vh-100 intest">
         <div class="container">
             <div class="row">
@@ -15,6 +15,7 @@
                 </div>
 
                 <div class="col-12 my-5">
+                    <!-- FORM PER LA CREAZIONE -->
                     <form method="post" th:action="@{/categories}" th:object="${category}">
                         <div class="row mb-3">
                             <div class="col">
@@ -23,14 +24,14 @@
                                 <p th:errors="*{name}" class="text-danger" th:if="${#fields.hasErrors('name')}"></p>
                             </div>
                         </div>
-
+                        <!-- BUTTON PER CREARE LA CATEGORIA -->
                         <button type="submit" class="btn btn-success">Create Category</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
+    <!-- FOOTER -->
     <head th:insert="~{index :: footer}"></head>
     <script th:insert="~{index :: bootstrapScript}"></script>
 </body>

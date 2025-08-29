@@ -69,13 +69,13 @@
 </head>
 
 <body>
-
+    <!-- NAVBAR -->
     <head th:insert="~{index :: navbar}"></head>
 
     <div class="headerSmartBayArticle">
         <div id="cart-notification-container">
         </div>
-
+        <!-- HEADER -->
         <div class="container-fluid intest">
             <div class="row ms-5 align-items-center">
                 <div class="col-12 d-flex justify-content-center align-items-center my-3">
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- CARD ARTICOLO -->
         <div class="container" th:if="${articles.size() > 0}">
             <div class="row my-2 justify-content-center">
                 <div th:each="article:${articles}" class="col-12 col-md-4 d-flex justify-content-center my-5">
@@ -97,19 +97,23 @@
                                 <p class="card-text" th:text="${article.price}"></p><span>€</span>
                             </div>
                             <div class="d-flex justify-content-end align-items-center">
+                                <!-- BUTTON PER IL DETTAGLIO -->
                                 <a th:href="@{/articles/detail/{id}(id=${article.id})}"
-                                    class="btn btn-secondary mx-1">Show</a>
-                                    <form th:attr="hx-post=@{/carrello/htmx-add/{id}(id=${article.id})}" hx-target="#cart-notification-container"
-                                        hx-swap="innerHTML" hx-trigger="submit" style="display:inline;">
-                                        <button type="submit" class="btn btn-success mx-1"><i class="fa-solid fa-cart-plus"></i></button>
-                                    </form>
+                                    class="btn btn-secondary mx-1">
+                                    Show
+                                </a>
+                                <!-- AGGIUNGERE ARTICOLO AL CARRELLO -->
+                                <form th:attr="hx-post=@{/carrello/htmx-add/{id}(id=${article.id})}" hx-target="#cart-notification-container"
+                                    hx-swap="innerHTML" hx-trigger="submit" style="display:inline;">
+                                    <button type="submit" class="btn btn-success mx-1"><i class="fa-solid fa-cart-plus"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        <!-- SEZIONE ARTICOLI INESISTENTI -->
         <div class="container-fluid" th:unless="${articles.size() > 0}">
             <div class="row justify-content-center align-items-center min-vh-100">
                 <div class="col-12 mb-5">
@@ -118,8 +122,9 @@
             </div>
         </div>
     </div>
-
+    <!-- FOOTER -->
     <head th:insert="~{index :: footer}"></head>
+    <!-- SCRIPT -->
     <div th:insert="~{index :: bootstrapScript}"></div>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/remove-me.js"></script>

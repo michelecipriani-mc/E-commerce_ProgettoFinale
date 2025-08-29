@@ -3,14 +3,15 @@
     <head th:insert="~{index :: head}"></head>
 
     <body>
+        <!-- Navbar component -->
         <head th:insert="~{index :: navbar}"></head>
-
+        <!-- Messaggio di errore per notAutorized -->
         <div th:if="${param.notAuthorized}">
             <div class="alert alert-danger errorMessage">
                 Not authorized!
             </div>
         </div>
-
+        <!-- Messaggi di successo e errore per funzionalità -->
         <div th:if="${successMessage}">
             <div class="alert alert-success errorMessage">
                 <p th:text="${successMessage}"></p>
@@ -22,7 +23,7 @@
                 <p th:text="${errorMessage}"></p>
             </div>
         </div>
-
+        <!-- Header -->
         <div class="container-fluid bg-success">
             <div class="row align-items-center justify-content-center">
                 <div class="col-12 p-0">
@@ -31,7 +32,7 @@
                 </div>
             </div>
         </div>
-            
+        <!-- Sezione ultimi articoli postati -->
         <div class="container" th:if="${articles.size() > 0}">
             <div class="row align-items-center justify-content-center">
                 <div class="col-12 my-5 d-flex justify-content-center align-items-center">
@@ -40,6 +41,7 @@
             </div>
             <div class="row my-2 justify-content-center">
                 <div th:each="article:${articles}" class="col-12 col-md-4 d-flex justify-content-center my-5">
+                    <!-- Card in foreach per ogni articolo -->
                     <div class="card" style="width: 18rem;">
                         <img th:if="${article.image != null}" th:src="${article.image.path}" class="card-img-top imgCard" alt="article image">
                         <div class="card-body bg-body-secondary d-flex flex-column">
@@ -52,8 +54,9 @@
                 </div>
             </div>
         </div>
-
+        <!-- footer component -->
         <head th:insert="~{index :: footer}"></head>
+        <!-- script -->
         <script th:insert="~{index :: bootstrapScript}"></script>
     </body>
 </html>

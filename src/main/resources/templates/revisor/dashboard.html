@@ -4,17 +4,18 @@
 <head th:insert="~{index :: head}"></head>
 
 <body>
-
+    <!-- Navbar component -->
     <head th:insert="~{index :: navbar}"></head>
 
     <div class="min-vh-100">
-
+        <!-- Messaggi di successo e errore per funzionalità -->
         <div th:if="${resultMessage}">
             <div class="alert alert-success errorMessage">
                 <p th:text="${resultMessage}"></p>
             </div>
         </div>
-
+        <!-- DASHBOARD -->
+        <!-- SEZIONE REVISIONI DA EFFETTUATE -->
         <div class="container-fluid intest">
             <div class="row ms-5 me-5 align-items-center">
                 <div class="col-12 d-flex justify-content-center align-items-center my-3">
@@ -24,6 +25,7 @@
                     <h2 th:text="${title}">Articles to review</h2>
                 </div>
                 <div class="col-12">
+                    <!-- Tabella per articoli da revisionare -->
                     <table class="table table-striped table-responsive-lg">
                         <thead>
                             <tr>
@@ -52,11 +54,12 @@
                 </div>
             </div> 
         </div> 
-
+        <!-- SEZIONE REVISIONI EFFETTUATE -->
         <div class="container-fluid">
             <div class="row ms-5 me-5">
                 <div class="col-12 min-vh-100">
                     <h2 class="h2 my-5" th:text="${titleReviewed}">Reviewed articles</h2>
+                    <!-- Tabella per articoli revisionati -->
                     <table class="table table-striped table-responsive-lg">
                         <thead>
                             <tr>
@@ -85,7 +88,7 @@
             </div>
         </div>
     </div>
-
+    <!-- FOOTER -->
     <head th:insert="~{index :: footer}"></head>
     <script th:insert="~{index :: bootstrapScript}"></script>
 

@@ -4,18 +4,20 @@
     <head th:insert="~{index :: head}"></head>
 
     <body>
-
+        <!-- NAVBAR -->
         <head th:insert="~{index :: navbar}"></head>
 
         <div class="container intest">
             <div class="row align-items-center">
                 <div class="col-12">
+                    <!-- MESSAGGIO DI REGISTRAZIONE AVVENUTA CON SUCCESSO -->
                     <div th:if="${param.success}">
                         <div class="alert alert-info errorMessageLR">
                             You have successfully registered our App!
                         </div>
                     </div>
                 </div>
+                <!-- FORM DI REGISTRAZIONE -->
                 <div class="col-12 min-vh-100 d-flex flex-column justify-content-center align-items-center">
                     <h1 class="my-3">Register</h1>
                     <!-- FirstName input -->
@@ -23,36 +25,43 @@
                         <p class="title1">Create account</p>
                         <p class="sub-title1">Let's get statred with your 30 days free trial</p>
                         <form method="post" role="form" th:action="@{/register/save}" th:object="${user}">
+                            <!-- Nome -->
                             <div class="mb-3">
                                 <input type="text" class="form-control input1" id="firstName" name="firstName"
                                     placeholder="First Name" th:field="*{firstName}" />
                                 <p th:errors="*{firstName}" class="text-danger" th:if="${#fields.hasErrors('firstName')}">
                                 </p>
                             </div>
+                            <!-- Cognome -->
                             <div class="mb-3">
                                 <input type="text" class="form-control input1" id="lastName" name="lastName"
                                     placeholder="Last Name" th:field="*{lastName}" />
                                 <p th:errors="*{lastName}" class="text-danger" th:if="${#fields.hasErrors('lastName')}">
                                 </p>
                             </div>
+                            <!-- Email -->
                             <div class="mb-3">
                                 <input type="email" class="form-control input1" id="email" name="email"
                                     placeholder="Enter Email Address" th:field="*{email}" />
                                 <p th:errors="*{email}" class="text-danger" th:if="${#fields.hasErrors('email')}"></p>
                             </div>
+                            <!-- Password -->
                             <div class="mb-3">
                                 <input type="password" class="form-control input1" id="password" name="password"
                                     placeholder="Enter Password" th:field="*{password}" />
                                 <p th:errors="*{password}" class="text-danger" th:if="${#fields.hasErrors('password')}">
                                 </p>
                             </div>
+                            <!-- Button per la creazione dell'account -->
                             <div class="mb-3">
                                 <button type="submit" class="form-btn1">Create account</button>
                             </div>
                         </form>
+                        <!-- riferimento alla login -->
                         <p class="sign-up-label1">
                             Already have an account?<a th:href="@{/login}">Log in</a>
                         </p>
+                        <!-- registrati con apple -->
                         <div class="buttons-container">
                             <div class="apple-login-button">
                                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" class="apple-icon"
@@ -63,6 +72,7 @@
                                 </svg>
                                 <span>Sign up with Apple</span>
                             </div>
+                            <!-- registrati con google -->
                             <div class="google-login-button">
                                 <svg stroke="currentColor" fill="currentColor" stroke-width="0" version="1.1" x="0px"
                                     y="0px" class="google-icon" viewBox="0 0 48 48" height="1em" width="1em"
@@ -85,7 +95,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- FOOTER -->
         <head th:insert="~{index :: footer}"></head>
         <script th:insert="~{index :: bootstrapScript}"></script>
     </body>
