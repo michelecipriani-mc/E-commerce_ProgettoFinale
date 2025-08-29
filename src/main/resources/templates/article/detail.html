@@ -128,7 +128,7 @@
 
     <!-- FOOTER -->
     <footer th:insert="~{index :: footer}" class="smartbay-footer mt-5"></footer>
-    <script th:insert="~{index :: bootstrapScript}"></script>
+    <script th:replace="~{index :: bootstrapScript}"></script>
 
     <script>
         function goBack() {
