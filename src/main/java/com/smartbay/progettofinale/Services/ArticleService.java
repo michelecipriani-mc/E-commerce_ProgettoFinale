@@ -49,7 +49,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
      *
      * @param article   L'entità articolo da creare.
      * @param principal L'utente che sta creando l'articolo.
-     * @param file      Il file immagine da associare.
+     * @param files     I file immagine da associare.
      * @return Il DTO dell'articolo creato.
      */
     @Override
@@ -95,7 +95,7 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
      * Questo metodo elimina anche l'immagine associata e rimuove l'articolo dai
      * carrelli degli utenti.
      *
-     * @param id L'ID dell'articolo da eliminare.
+     * @param key L'ID dell'articolo da eliminare.
      */
     @Override
     @Transactional
@@ -147,9 +147,9 @@ public class ArticleService implements CrudService<ArticleDTO, Article, Long> {
     /**
      * Aggiorna un articolo.
      *
-     * @param id      L'ID dell'articolo da aggiornare.
-     * @param article L'entità articolo con i nuovi dati.
-     * @param file    Il file immagine (opzionale).
+     * @param key            L'ID dell'articolo da aggiornare.
+     * @param updatedArticle L'entità articolo con i nuovi dati.
+     * @param files          I file immagine (opzionale).
      * @return Il DTO dell'articolo aggiornato.
      */
     @Override

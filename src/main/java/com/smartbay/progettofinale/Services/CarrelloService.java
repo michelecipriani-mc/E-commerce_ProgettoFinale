@@ -68,7 +68,7 @@ public class CarrelloService {
    * Chiamato da {@code ArticoloService} quando un articolo è modificato o eliminato
    *
    * @param idArticolo ID dell'articolo da rimuovere.
-   * @see ArticoloService
+   * @see ArticleService
    */
   public void rimuoviArticoloDaTuttiICarrelli(Long idArticolo) {
 

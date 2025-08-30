@@ -24,17 +24,27 @@ public class Carrello {
   private boolean isModified = false;
   
   // --- Metodi
+  
   /**
-    * Metodo per aggiungere articoli al carrello o rimuoverne uno alla volta.
-    * Attraverso Thymeleaf:
-      * Nella pagina dell'articolo, l'utente avrà a disposizione un menù a tendina dal quale scegliere
-      * il quantitativo di prodotti di quel tipo da aggiungere al carrello. 
-      * Dalla pagina del carrello, L'utente avrà a disposizione una interfaccia con tasti (+), (-) e
-      * (cestino), che richiamerà indirettamente questo metodo quando preme (+) o (-), con
-      * {@code cambiamentoQuantità} valorizzato in +1 o -1. 
-    * N.B.: questo metodo non controlla se esiste un articolo associato a idArticolo.
-    * @param articleId ID dell'articolo del quale modificare la quantità nel carrello dell'utente
-    * @param changeInQuantity Cambiamento nella quantità
+   * Metodo per aggiungere articoli al carrello o rimuoverne uno alla volta.
+   * Attraverso Thymeleaf:
+   * <ul>
+   * <li>Nella pagina dell'articolo, l'utente avrà a disposizione un menù a
+   * tendina dal quale scegliere il quantitativo di prodotti di quel tipo da
+   * aggiungere al carrello.</li>
+   * <li>Dalla pagina del carrello, L'utente avrà a disposizione una interfaccia
+   * con tasti (+), (-) e (cestino), che richiamerà indirettamente questo metodo
+   * quando preme (+) o (-), con {@code cambiamentoQuantità} valorizzato in +1 o
+   * -1.</li>
+   * </ul>
+   *
+   * N.B.: questo metodo non controlla se esiste un articolo associato a
+   * idArticolo.
+   * 
+   * @param idArticolo          ID dell'articolo del quale modificare la quantità
+   *                            nel
+   *                            carrello dell'utente
+   * @param cambiamentoQuantita Cambiamento nella quantità
    */
   public void aggiornaQuantitaArticolo(Long idArticolo, int cambiamentoQuantita) {
     // Inizializza carrello se ancora non esiste
