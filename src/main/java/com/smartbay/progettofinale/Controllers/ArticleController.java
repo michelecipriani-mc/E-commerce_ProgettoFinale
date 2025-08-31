@@ -123,7 +123,7 @@ public class ArticleController {
      * @param result             Risultato della validazione.
      * @param redirectAttributes Attributi per il redirect.
      * @param principal          Oggetto Principal dell'utente corrente.
-     * @param file               Il file immagine caricato.
+     * @param files              I file immagine caricati.
      * @param viewModel          Oggetto Model per la vista.
      * @return Redirect alla home o al form in caso di errore.
      */
@@ -194,7 +194,7 @@ public class ArticleController {
      * @param result             Risultato della validazione.
      * @param redirectAttributes Attributi per il redirect.
      * @param principal          Oggetto Principal dell'utente corrente.
-     * @param file               Il nuovo file immagine.
+     * @param files              I nuovi file immagine.
      * @param viewModel          Oggetto Model per la vista.
      * @return Redirect alla dashboard del venditore o al form in caso di errore.
      */

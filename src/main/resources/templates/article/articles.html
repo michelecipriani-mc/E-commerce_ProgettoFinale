@@ -92,7 +92,7 @@
                 <div th:each="article:${articles}" class="col-12 col-md-4 d-flex justify-content-center my-5">
                     <div class="card" style="width: 18rem;">
                         <th:block th:if="${article.images != null and !article.images.isEmpty()}">
-                            <img th:src="@{${article.images[0].path}}" class="card-img-top imgCard" alt="article image">
+                            <img th:src="@{${article.images[0].path}}" class="card-img-top imgCardSt" alt="article image">
                         </th:block>
                         <th:block th:unless="${article.images != null and !article.images.isEmpty()}">
                             <img th:src="@{/images/default.png}" class="card-img-top imgCard"
