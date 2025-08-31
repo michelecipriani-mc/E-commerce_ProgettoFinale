@@ -70,3 +70,6 @@ Apri il browser su http://localhost:8080
 
 Dopo aver eseguito e lanciato il progetto da ProgettofinaleApplication.java verrà automaticamente creato un DataBase chiamato smartbay, e verrà automaticamente popolata la tabella dei ruoli. Per poter eseguire correttamente tutte le funzionalità, risulta necessario impostare manualmente per l'utente amministratore solo per la prima volta il ruolo. 
 Viene effetuato recandosi nella cartella -> .sql -> nel file insert.sql e cliccare su RUN
+## 📑 Documentazione
+
+La documentazione Javadoc è disponibile qui: https://michelecipriani-mc.github.io/E-commerce_ProgettoFinale/
